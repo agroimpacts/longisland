@@ -1,0 +1,222 @@
+---
+title: "LongIsland Sound Project Vignette Notes"
+author: "sa346" "ktp3462"
+date: "April 22, 2019"
+output: html_document
+ vignette: >
+  %\VignetteIndexEntry{Long Island Project}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+next steps (think about all of project along the way) and read about the study to conceptualize water quality  http://longislandsoundstudy.net/research-monitoring/water-quality-monitoring/
+
+1. Import CVSs and manipulate as needed (need coordinates and bouy information)
+
+```{r}
+#cheetsheet 
+# https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf 
+
+install.packages("devtools")
+devtools::install_github("tidyverse/dplyr")
+library("devtools")
+install.packages("utils")
+library("utils")
+install.packages("tidyverse")
+library("tidyverse")
+install.packages("dplyr")
+library("dplyr")
+install.packages("readr")
+library("readr")
+library(dplyr)
+library(tidyr)
+library(mapview)
+```
+
+dat <- readr::read_csv("~/Desktop/dummy_dataset.csv")
+#example
+
+
+#loading data
+```{r}
+mastersheet <- readr::read_csv("C:/Users/Sophia/Desktop/ADP/RStudio/sa346/Group Project/LongIsland_Project/Data/CoordinatesTimeDiff.csv")
+#the project is my working directoy, and the csv file is in there, so not sure why r is saying it doens't exist 
+```
+
+#recognise longitude and latitude, notice each point as Site Name
+```{r}
+  read_csv %>% distinct(uuid, .keep_all = TRUE) %>% select(uuid, x, y) %>% 
+  mutate(count = 1) %>% st_as_sf(coords = c("x", "y"))
+```
+
+#looping to recognise when we upload data again
+```{r}
+  dir(pattern = "farmer_spatial.csv|[districts|roads]*.*.shp", 
+      full.names = TRUE) %>% 
+  map(function(x) {
+    if(basename(x) == "farmer_spatial.csv") {
+      read_csv(x) %>% st_as_sf(., coords = c("x", "y"), crs = 4326)
+    } else {
+      st_read(x)
+    }
+  }) %>% set_names(c("d", "f", "r")) -> sdat
+```
+
+#recognise from system file and use as sf object
+```{r}
+farmers <- system.file("extdata/farmer_spatial.csv", package = "geospaar") %>% 
+  read_csv() %>% st_as_sf(coords = c("x", "y"), crs = 4326)
+```
+
+#wired further
+```{r}
+library(geospaar)
+system.file("extdata/", package = "geospaar") %>% 
+  dir(pattern = "farmer_spatial.csv|[districts|roads]*.*.shp", 
+      full.names = TRUE) %>% 
+  map(function(x) {
+    if(basename(x) == "farmer_spatial.csv") {
+      read_csv(x) %>% st_as_sf(., coords = c("x", "y"), crs = 4326)
+    } else {
+      st_read(x)
+    }
+  }) %>% set_names(c("d", "f", "r")) -> sdat
+```
+
+#reprojecting data is
+```{r}
+st_transform(sdat$d, crs = st_crs(sdat$r)) %>% 
+  st_intersection(x = ., y = rd_sel_buff) %>% st_geometry %>% 
+  plot(col = bpy.colors(length(.)))
+```
+
+
+
+#take a look at points, maybe organize
+```{r}
+head()
+<- as_tibble()
+<- data.table()
+aggregate(d$b, list(d$a), mean)
+d_tb %>% group_by(a) %>% summarize(mean(b))
+d_dt[, mean(b), by = a][order(a)]
+#Think about Indexing
+a <- 1:10
+b <- a
+names(b) <- letters[1:10]
+```
+
+
+### mapView
+```{r, eval = FALSE}
+mapview(mastersheet)
+addHomeButton(mastersheet)
+addMouseCoordinates()
+install.packages('ggsn')
+```
+
+#upload boey data
+```{r}
+
+```
+
+#statistics on certina fields for individual bouy data
+```{r}
+
+```
+
+#regression on points
+```{r}
+
+```
+
+
+#graph data, can I make a trend analysis?
+```{r}
+
+```
+
+#regression
+```{r}
+time <- 1:nlayers(chirpsz)
+fun <- function(x) {
+  if(any(is.na(x))) {
+    o <- NA
+  } else {
+    o <- lm(x ~ time)$coefficients[2]  
+  }
+  o
+}
+chirpsz_reg <- calc(chirpsz, fun = fun)
+chirpsz_reg %>% plot
+```
+
+
+
+#Mapview
+```{r}
+
+
+
+
+
+
+
+
+
+
+
+
+
+methodology notes
+
+1. graphing and mapping data
+
+Look at class slides
+
+2. stats analysis (will not find significant outputs)
+
+intermediate stats class for pattern/cluster anlaysis - maybe play around with this in SPSS
+  
+regression - stats
+  
+  covariance, Correlation- the degree to which two variables “covary”. Correlation accounts for the standard deviations of the measures and varies from (-1, +1)
+  Correlation coefficient R expresses the degree of fit.
+Coefficient of Determination (r2) expresses the percentage of variance in Y that is explained by x
+
+  Regression- mathematical specification of relationship between two variables, where one is the dependent (Y) variable and one is the independent variable (X)
+  
+3. seasonal trend analysis and graphing 
+  advacned raster class 
+ 
+ Time series analysis
+
+Index Time series
+Image times series
+Time Series File
+ 
+Median trend (Theil-Sen)-slope of every pairwise combination then finds median value.
+breakdown bond of 29 percent: trends expressed in the image must have persisted for more than 29 percent of their length of the series. 
+
+Monotonic trend (Mann-Kendall)- measures how consistently is the trend increasing or decreasing. Has range from -1 to 1, (constantly increases and never decreases and vice versa). A value of 0 indicates no consistent trend. 
+
+All pairwise combinations of values over time are evaluated and a tally is made of the number that are increasing or are decreasing over time.
+Mann-Kendall Significance- produces 2 images, measuring significance of Mann-Kendall Trend
+one is a significance image expressed as Z scores
+one is an image that expresses the probability that the observed trend could have occurred by chance.
+
+  (there are more notes in google from advaned Raster (Test 1 prep work etc))
+  
+  
+  
+  
+  
+  
+  
+  
