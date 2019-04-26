@@ -117,7 +117,7 @@ names(b) <- letters[1:10]
 ```{r, eval = FALSE}
 mapview(mastersheet)
 addHomeButton(mastersheet)
-addMouseCoordinates()
+addMouseCoordinates(mastersheet)
 install.packages('ggsn')
 ```
 
