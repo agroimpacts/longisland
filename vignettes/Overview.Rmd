@@ -1,0 +1,73 @@
+---
+title: "Overview"
+author: "Kyle Pecsok"
+date: "4/22/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Summary
+
+This project is going to look at buoy data that was collected along the Long Island Sound. The data is being taken from the University of Connecticut's Long Island Sound study. The buoy data reports on many different variables of each buoy station, including variable changes from two different points. Each buoy point has data collected from slightly different year ranges. These date ranges typically range from some point in the 1990s to some point in the late 2000s or 2010s. However, each measurement difference is taken at about the same time during the year at the peak of summer, and at least 10 years between. We will examine variable changes among each buoy point and location. There are 29 buoy point locations in the mastersheet, which is the time difference sheet, including coordinates for each point.
+The water quality changes in this sheet include:
+1. Temperature change
+2. Dissolved oxygen change
+3. Water conductivity change
+4. Salinity Change
+
+Other metrics from the individual  buoys might include:
+1. Bottom temperature change
+2. Biological Silica Content change
+
+And there is also:
+1. Shellfish harvested data (oysters, clams, lobsters)
+2. fish population change
+3. economic value of fish harvested
+
+We will map the buoy points using an interactive map that shows the buoy locations along the Long Island Sound.
+
+Approach and Method
+
+Data:
+
+The main data is from a csv file called MasterSheet that is uploaded onto GitHub, this sheet that was initially on Excel shows the coordinates of the buoy points and the water quality change. In addition to the MasterSheet we have other csv files that are on GitHub that includes the individual buoy points (separated by Eastern and Western Sound), there are only 12 buoy points that we will examine individually as the data collected from these buoy points was more frequent and more consistent. Other csv files that are also on GitHub are the number of cold water and warm water fish that were collected at a specific buoy point that was analyzed from 1984 to 2017 during the Spring and the Fall seasons. We have another csv file that shows harvest information along the Long Island Sound of oysters, clams, and lobsters from similar time frames. We also have the economic value of these shellfish copied from a table at the Long Island Sound Study site. The data comes from this study and is pretty complete, but it would be nice if there were more sample points from which to create statistics from and less missing values in the data. Today I also uploaded some simple csv files from data on their water quality index of "poor", "fair", and "good" index measures for The Narrows, Western Basin, Eastern Basin, and Central Basin to maybe make pie charts later or use as a reference to say that the Narrow and Western Basin have poorer water quality.
+Code:
+
+Install the ggsn package install.packages('ggsn') into the already created plots to add North Arrow and a scale plot in the ggplots created already. (Kyle)
+
+Use the installed mapview to create an interactive map of the buoy points locations along the Long Island Sound. (Kyle)
+
+Convert MasterSheet file into spatial data (Kyle).
+
+Upload buoy data and difference in water quality data, as well as shellfish/fish harvested data (Sophie) using readr::read_csv
+
+Plot some of this data using ggplot (Sophie)
+
+Find correlation and regression statitics of water quality indicators at buoys. Use custer analysis (Sophie). So far, we have descriptive statistics, correlation, variance, coefficient of determination, multiple linear regression, nonlinearity plotting, and K-means and Hierarchical cluster analysis. As of now I am using sapply, cor(), var(), lm(), qqPlot(), crPlots(), ceresPlots(), kmeans(), and hclust()
+
+upload shellfish harvested and fish data samples collected data with readr::read_csv, and economic value of shellfish (Sophie)
+
+Find some other statistics from shellfish harvested, as well as upload and graph the economic value of shellfish harvested from http://longislandsoundstudy.net/ecosystem-target-indicators/shellfish-harvested/ (Sophie)
+
+Think about create special equations to model the relationship between water quality measures as a polynomial regression equation using statistics outputs (Sophie)
+
+```Timeline:
+
+April 22nd: Have all csv files within R, and have ggplots of various csv files plotted to show the visual data that is shown above.
+
+April 29th: Have most or majority of statistical analysis completed which Sophie will mostly do that which includes creating graphs that show temperature change. Then, Kyle will complete the different mapviews to be used for visual analysis thats include the buoy points and the comparison data, such as the temperature changes per year within each individually of the 12 analyzed buoys. The maps do not neccessarily need to look, pretty, but should at least be created.
+
+May 6th: Have all of the statistcal analysis completed with graphs showinging the relationships that the group feels is the best, to share. Make sure that all maps are considered visually appealing to the audience and that they each include a lenged, north arrow, title, and scale bar. Same for the graphs as well and the probably some of the ggplots that are created as well to show the how the buoy points are spatially distributed.
+
+Anticipated Outcomes:
+
+Correlation between water quality change and year and regression information.
+
+An increase in the number of warm water fish overtime during both Fall and Spring as water temperatures would be expected to increase overtime from climate change.
+
+We are expecting an overall increase in water temperature at each buoy points.
+
+We are not expecting statistically significant results among our data as we have relatively small amount of data in terms of the number of buoy points and the number of years data was collected.
