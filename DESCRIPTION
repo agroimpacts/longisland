@@ -9,4 +9,5 @@ Depends: R (>= 3.0.0)
 License: N/A
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder: knitr
 RoxygenNote: 6.1.1
