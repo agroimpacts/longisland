@@ -1,0 +1,16 @@
+Package: longisland
+Type: Package
+Title: Bouy Data Change in Long Island
+Version: 0.0.0.9000
+Authors: Kyle Pecsok and Sophie Aronow
+Mainainters: Kyle Pecsok <kpecsok@clarku.edu> Sophie Aronow <saronow@clarku.edu
+Description: Project used for GEOG 246/346 final project of the year.
+Depends: R (>= 3.0.0)
+License: N/A
+Encoding: UTF-8
+LazyData: true
+VignetteBuilder: knitr
+Suggests: 
+    knitr,
+    rmarkdown
+RoxygenNote: 6.1.1
