@@ -1,8 +1,8 @@
 ---
-title: "SA and KP Long Island Sound Project"
+title: "Long Island Sound Project"
 authors: "Kyle Pecsok" "Sophie Aronow"
 date: "05/07/2019"
-output: rmarkdown::html_document
+output: rmarkdown::html_vignette
 vignette: >
  %\VignetteIndexEntry{Final Project LongIsland Water Quality}
  %\VignetteEngine{knitr::rmarkdown}
@@ -13,32 +13,30 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Works perfectly and gives us results that contain everything we need to evaluate the project. Datasets that are too large to be committed to the package repo should be linked to, but the code used to process them should be clear, and any figures built from them should be committed to the repo and incorporated in your package vignettes. Vignettes will contain the material we are most interested in, but we will also examine your DESCRIPTION, NAMESPACE, function documentation (if applicable), i.e. the key components of making an R package and delivering it in a reproducible manner. 
 
-```{r, final project description}
-#Works perfectly and gives us results that contain everything we need to evaluate the project. Datasets that are too large to be committed to the package repo should be linked to, but the code used to process them should be clear, and any figures built from them should be committed to the repo and incorporated in your package vignettes. Vignettes will contain the material we are most interested in, but we will also examine your DESCRIPTION, NAMESPACE, function documentation (if applicable), i.e. the key components of making an R package and delivering it in a reproducible manner. 
+Jointly authored vignettes in group projects should have team member initials indicating which section each member worked on which section. Otherwise, separately authored ones should have team member titles at the top.  
 
-#Jointly authored vignettes in group projects should have team member initials indicating which section each member worked on which section. Otherwise, separately authored ones should have team member titles at the top.  
+As stated before, if there are clear, separable tasks that lend themselves to separate development efforts, team members should work on those and make frequent commits within their own repo branches. 
 
-#As stated before, if there are clear, separable tasks that lend themselves to separate development efforts, team members should work on those and make frequent commits within their own repo branches. 
+R code should follow the [style](http://adv-r.had.co.nz/Style.html) we have been using all along. 
 
-#R code should follow the [style](http://adv-r.had.co.nz/Style.html) we have been using all along. 
-```
-```{r}
-#1. Introduction (SA)
+1. Introduction (SA)
 
-#The Long Island Sound Study in Connecticut, New York, and Road Island serves as a new robust and localized case study to learn from and possibly improve. It is a "bi-state partnership" that includes networks with federal and state agencies, user goups, organizations, and individuals that are concerned with the health of the Sound (*About the Long Island Sound Study*). The study uses Ecosystem Indicators measuements to assess the health of the Lond Island Sound ecosystem among climate change impacts like sea level rise, temperature change, and ocean acidification (*What You Should Know*). The main indicators fall into categories on waters and watersheds, habitats and wildlife, and community sustainability and resilience. Because of the broad effects of climate change to the region, quantitative indicators relate to a range of topics, those including physical, biological, chemical, and socioeconomic (*LISS Ecosystem Targets and Supporting Indicators*). Physical measurements like temperature and slinity of water can be used to track water mass movements. These indicators and the level of dissolved oxygen can indicate how suitable the water is for marine life. Other chemical and biological analyses on animal tissue can indicate what chemicals and biological material is present in the water, including contaminents. Minitoring of water and sampling of species can occure on a continuous, temportary, seaosnal, or emergency basis. Many buoy locations where monitoring occurs happens at different intervals and time rnages, which affects this analysis (*Water Quality Monitoring*).
+The Long Island Sound Study in Connecticut, New York, and Road Island serves as a new robust and localized case study to learn from and possibly improve. It is a "bi-state partnership" that includes networks with federal and state agencies, user goups, organizations, and individuals that are concerned with the health of the Sound (*About the Long Island Sound Study*). The study uses Ecosystem Indicators measuements to assess the health of the Lond Island Sound ecosystem among climate change impacts like sea level rise, temperature change, and ocean acidification (*What You Should Know*). The main indicators fall into categories on waters and watersheds, habitats and wildlife, and community sustainability and resilience. Because of the broad effects of climate change to the region, quantitative indicators relate to a range of topics, those including physical, biological, chemical, and socioeconomic (*LISS Ecosystem Targets and Supporting Indicators*). Physical measurements like temperature and slinity of water can be used to track water mass movements. These indicators and the level of dissolved oxygen can indicate how suitable the water is for marine life. Other chemical and biological analyses on animal tissue can indicate what chemicals and biological material is present in the water, including contaminents. Minitoring of water and sampling of species can occure on a continuous, temportary, seaosnal, or emergency basis. Many buoy locations where monitoring occurs happens at different intervals and time rnages, which affects this analysis (*Water Quality Monitoring*).
 
-#Water quality indicators used here include surface temperature, dissolved oxygen, and salinity. We focus on these metrics because we understand them better and because of time and scope contraints. The measurments come from the Water Quality Monitoring Program from the Connecticut Department of Energy and Environmental Protection on behalf of the study (*Department of Environmental Protection*). A helpful map to get a sense of the study area can be found here (*Long Island Sound Monitoring Stations...*). This map shows where the four main regions of the study. From west to east these regions are The Narrows, Western Sound, Central Sound, and Eastern Sound. Notice that The Narrows is losets to New York City, the Western Sound is closest to Bridgeport and other populated areas, and the Central and Eastern Sound are located between less-populated regions (*Long Island Sound Report Card*). Here is a mapview map of the study area color coded by region:
-```
-```{r, loading libraries}
+Water quality indicators used here include surface temperature, dissolved oxygen, and salinity. We focus on these metrics because we understand them better and because of time and scope contraints. The measurments come from the Water Quality Monitoring Program from the Connecticut Department of Energy and Environmental Protection on behalf of the study (*Department of Environmental Protection*). A helpful map to get a sense of the study area can be found here (*Long Island Sound Monitoring Stations...*). This map shows where the four main regions of the study. From west to east these regions are The Narrows, Western Sound, Central Sound, and Eastern Sound. Notice that The Narrows is losets to New York City, the Western Sound is closest to Bridgeport and other populated areas, and the Central and Eastern Sound are located between less-populated regions (*Long Island Sound Report Card*). Here is a mapview map of the study area color coded by region:
+
 #2. Methods
 
-#We first load all the libraries we need, and even a little extra just in case we need them. (SA)
+We first load all the libraries we need, and even a little extra just in case we need them. (SA)
+
+```{r}
 library(mapview)
 mapview_study_regions <- mapview(mastersheet, zcol = "Region", legend = TRUE)
 mapview_study_regions
-#We assess in detail the dissolved oxygen, temperature, and salinity indicators at four selected buoy locations and reiterate their significance, and create graphical ouptuts to accompany the study's online graphics and information. We include some statstical analysis: descriptive statistics, correlation, variance, and regression to explain the chosen indicators at the four buoys. We also include water quality index metrics, shellfish harvest data, and fish abundance data to illistrate the health of the sound. We also elaborate on consider data and time limitations and ways in which this project could improve in the future.
 ```
+We assess in detail the dissolved oxygen, temperature, and salinity indicators at four selected buoy locations and reiterate their significance, and create graphical ouptuts to accompany the study's online graphics and information. We include some statstical analysis: descriptive statistics, correlation, variance, and regression to explain the chosen indicators at the four buoys. We also include water quality index metrics, shellfish harvest data, and fish abundance data to illistrate the health of the sound. We also elaborate on consider data and time limitations and ways in which this project could improve in the future.
 ```{r, loading libraries}
 library(devtools)
 library(geospaar)
@@ -77,7 +75,7 @@ mapview_study_regions
 
 
 ```{r}
-setwdsetwd <- ("C:/Users/kylepecsok/Geog246/longisland/")
+#setwdsetwd <- ("C:/Users/kylepecsok/Geog246/longisland/")
 mastersheet <- readr::read_csv("Mastersheet.csv") %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
 
 mastersheet_na.omit <- na.omit(mastersheet)
