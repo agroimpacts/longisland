@@ -2,8 +2,7 @@
 title: "SA and KP Long Island Sound Project"
 authors: "Kyle Pecsok" "Sophie Aronow"
 date: "05/07/2019"
-output: html_document
-description: This is the final poject assignment output. It is located in the "longislandproject" repo on Github (https://github.com/orgs/agroimpacts/teams/longislandproject). All of the data necesary is on github in the repo and download with the code below.
+output: rmarkdown::html_document
 vignette: >
  %\VignetteIndexEntry{Final Project LongIsland Water Quality}
  %\VignetteEngine{knitr::rmarkdown}
@@ -91,6 +90,22 @@ mast <- mastersheet_na.omit
 ```{r}
 mapview_ox <- mapview(mast, zcol = "Dissolved Oxygen Change (mg/L)", at = seq(-3, 4, 1), legend = TRUE)
 mapview_ox
+```
+```{r}
+mapview_sal <- mapview(mast, zcol = "Salinity Change (PSU)", at = seq(-1.5, 1.5, 0.5), legend = TRUE)
+mapview_sal
+```
+```{r}
+mapview_temp <- mapview(mast, zcol = "Temperature Change (Fahrenheit)", at = seq(-1, 3, 0.5), legend = TRUE)
+mapview_temp
+```
+```{r}
+mapview_con <- mapview(mast, zcol = "Conductivity Change (S/m)", at = seq(-0.3, 0.3, 0.1), legend = TRUE)
+mapview_con
+```
+```{r}
+mapview_den <- mapview(mast, zcol = "Density Change (kg/m^3)", at = seq(-1.2, 0.6, 0.3), legend = TRUE)
+mapview_den
 ```
 ```{r}
 #We create a sf plot in addition, but it does not explain the extent as well as the mapview and is not interactive. However it is interesting to see and easy to interpret. We index the mastersheet by column first to split the dataframe, or index by column. We change the astletics and make quantile breaks with unique break incriments for the lengend for the dissolved oxygen, temperautre, and salinity seperatly. For example: (SA)
