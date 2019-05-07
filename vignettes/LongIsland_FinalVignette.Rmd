@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 R code should follow the [style](http://adv-r.had.co.nz/Style.html) we have been using all along. 
 
-1. Introduction (SA)
+#1. Introduction (SA)
 
 The Long Island Sound Study in Connecticut, New York, and Road Island serves as a new robust and localized case study to learn from and possibly improve. It is a "bi-state partnership" that includes networks with federal and state agencies, user goups, organizations, and individuals that are concerned with the health of the Sound (*About the Long Island Sound Study*). The study uses Ecosystem Indicators measuements to assess the health of the Lond Island Sound ecosystem among climate change impacts like sea level rise, temperature change, and ocean acidification (*What You Should Know*). The main indicators fall into categories on waters and watersheds, habitats and wildlife, and community sustainability and resilience. Because of the broad effects of climate change to the region, quantitative indicators relate to a range of topics, those including physical, biological, chemical, and socioeconomic (*LISS Ecosystem Targets and Supporting Indicators*). Physical measurements like temperature and salinity of water can be used to track water mass movements. These indicators and the level of dissolved oxygen can indicate how suitable the water is for marine life. Other chemical and biological analyses on animal tissue can indicate what chemicals and biological material is present in the water, including contaminents. Minitoring of water and sampling of species can occure on a continuous, temportary, seaosnal, or emergency basis. Many buoy locations where monitoring occurs happens at different intervals and time rnages, which affects this analysis (*Water Quality Monitoring*).
 
@@ -271,7 +271,7 @@ xlab("Year") + ylab("Cold Water Fish Counts") +
 ggtitle("Cold Water Fish Counts During Spring") + theme_light()
 wcspring_c_p
 ```
-3. RESULTS (SA and KP)
+#3. RESULTS (SA and KP)
 
 Dissolved Oxygen:
 
@@ -415,7 +415,7 @@ wcfall_c_p #cold water fish index
 wcspring_w_p #warm water fish index
 wcspring_c_p #cold water fish index
 ```
-4. Discussion (SA, KP)
+#4. Discussion (SA, KP)
 
 Dissolved Oxygen
 
