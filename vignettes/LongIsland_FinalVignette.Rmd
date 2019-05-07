@@ -61,7 +61,7 @@ mastersheet <- readr::read_csv(system.file("extdata/Mastersheet.csv", package = 
 mastersheet_na.omit <- na.omit(mastersheet)
 mast <- mastersheet_na.omit
 ```
-To map, we first use the mapview function from the mapview package to view the data on an interactive display with a proper map of the Long Island Sound as a background extent. As an x + y coordinate is provided for each buoy point, the exact location is presented in the mapview. For each different mapview there is a different column is taken from Mastersheet.csv. As each column provides data for a certain variable, each mapview represents buoy location data associated with a variable (eg, Dissolved Oxygen Change). When making these mapviews we add a new sequence and a legend, and keep the colors as the defualt as shown below. These maps will allow us to see where the buoys are located along the sound and the distribution of the variables. (KP)
+To map, we first use the mapview function from the mapview package to view the data on an interactive display with a proper map of the Long Island Sound as a background extent. As an x and y coordinate is provided for each buoy point, the exact location is presented in the mapview. For each different mapview there is a different column is taken from Mastersheet.csv. As each column provides data for a certain variable, each mapview represents buoy location data associated with a variable (eg, Dissolved Oxygen Change). When making these mapviews we add a new sequence and a legend, and keep the colors as the defualt as shown below. These maps will allow us to see where the buoys are located along the sound and the distribution of the variables. (KP)
 ```{r}
 library(mapview)
 mapview_study_regions <- mapview(mast, zcol = "Region", legend = TRUE)
