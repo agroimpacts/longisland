@@ -96,6 +96,9 @@ r <- raster(extent(mastersheet_new), res = 0.03)
 US_Data <- getData('GADM', country='USA', level= 0)
 ```
 ```{r}
+system.file("extdata/Mastersheet_new.csv", package = "longisland")
+dat <- read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland"))
+mastersheet_new <- readr::read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland")) %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
 invdistdo <- gstat(formula = Do_change ~ 1, locations = ~x + y, data = dat)
 invdistrdo <- interpolate(object = r, model = invdistdo)
 invdistrmsk_do <- mask(x = invdistrdo, mask = US_data, inverse = TRUE)
