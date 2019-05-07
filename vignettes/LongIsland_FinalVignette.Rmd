@@ -91,7 +91,7 @@ mapview_con <- mapview(mast, zcol = "Conductivity Change (S/m)", at = seq(-0.3, 
 mapview_con
 ```
 ```{r}
-mapview_den <- mapview(mast, zcol = "Density Change (kg/m^3)", at = seq(-1.2, 0.6, 0.3), legend = TRUE)
+mapview_den <- mapview(mast, zcol = "Density Change (kg/m^3)", at = seq(-1.8, 0.9, 0.3), legend = TRUE)
 mapview_den
 ```
 We now create an aerial interpolation to better have a better visual of what areas of the Long Island Sound may have higher or lower values of each change that is being examined at all 29 buoy points. To do this we are using the Mastersheet data as the extent of our raster data. Mastersheet_New.csv is the same file as Mastersheet.csv, the only difference is on Mastersheet_New.csv I had to change the column name "Conductivity Change" to "Con_Change", and all other variables to "abbrevation_change" because aerial interpolation would not run if there was a space in the column name. For each interpolation I used data of the US outline from getData and then performing an inverse mask on it to allow the interpolation to only cover areas not on US land. In this case it was the Long Island Sound. Using this feature allows us to examine the general pattern of change throughout the Long Island Sound for each variable, and have a better idea where lower or higher values of change are occurring. (KP). 
@@ -291,7 +291,7 @@ The color differenciation between the two is different, so there is no dirct com
 
 Temperautre:
 
-The study's website notes that the Long Island Sound water temperature is increaseing at a rate of about 1.8 degrees celcius per century. The trend notes in a graph on the website shows the increaseing trend. However, water temperatures in the region stay relativly consistent from day to day (*What You Should Know*). The mapview output for water temperature actually shows that 22 of the points have a decrease in temperature between 0 and -2, and mainly between 0 and -1, while only 6 points show an increase in temperautre, unevenly, between 0 and 2 degrees. There is no significant visual pattern of decrease and increase in points. Here is a comparison between the mapview temperature change output, the areal interpolation, and the sf plotting tmeperature change output. It is still a little easier to interpret the sf plot just by way of having more hues, however the mapview is interactive and shows all point values from the mastersheet when clicked. The areal interpolation though shows the areas where general temperature increase is occurring which looks like closer to New York City in the Narrows Region and a little section of the eastern part of the sound, although that is likely influenced by one pont. In addition, the sf plot necesitates the complete code to map in this case, and the mapview is allisgned a name and takes up less space.
+The study's website notes that the Long Island Sound water temperature is increaseing at a rate of about 1.8 degrees celcius per century. The trend notes in a graph on the website shows the increaseing trend. However, water temperatures in the region stay relativly consistent from day to day (*What You Should Know*). The mapview output for water temperature shows most buoy points experienced fairly large jumps in temperature with increases from around 0 to 3 degrees Fahrenheit. There is no significant visual pattern of decrease and increase in points. Here is a comparison between the mapview temperature change output, the areal interpolation, and the sf plotting tmeperature change output. It is still a little easier to interpret the sf plot just by way of having more hues, however the mapview is interactive and shows all point values from the mastersheet when clicked. The areal interpolation though shows the areas where general temperature increase is occurring which looks like closer to New York City in the Narrows Region and a little section of the eastern part of the sound, although that is likely influenced by one point. In addition, the sf plot necesitates the complete code to map in this case, and the mapview is allisgned a name and takes up less space.
 ```{r}
 #mapview
 
@@ -306,7 +306,7 @@ mast_temp_p <- plot(mast[7], axes = TRUE, cex = 1.75, pch = 10, main = "Temperat
 ```
 Salinity
 
-Salinity is a measurement of dissolved salts in water. It is usually higher during periods of low water flows. Therefore, sea level rise over time can artificially decrease salinity level, decreasing its capacity to improve water conductivtiy and provide nutrients for marine life. Salinity at the study is measured in PSUs (Practical Salinity Unit), which is similar to the TDS (Total Dissolved Solids) measurement (*Howell & Gottschall, 2017*). The mapview output for salinity shows a variety of change, as expected. There are 8 points where salinity has increaed between 1 and 4 PSU, and 11 points where salinity has increased betwen 0 and 1 PSU. There are ten points where salinity has decreased between and 1 PSU. This shows an overal increase in salinity, suggesting that in 10 years there has been a drying up of the sound, though that conflicts with preexisting notions that there is an overall sea level rise trend. We cannot commit to a hypothesis like that about regional climatic change from differencing only two points.
+Salinity is a measurement of dissolved salts in water. It is usually higher during periods of low water flows. Therefore, sea level rise over time can artificially decrease salinity level, decreasing its capacity to improve water conductivtiy and provide nutrients for marine life. Salinity at the study is measured in PSUs (Practical Salinity Unit), which is similar to the TDS (Total Dissolved Solids) measurement (*Howell & Gottschall, 2017*). The mapview output for salinity shows a variety of change, as expected. Overall though only five points experienced an increase in salinity. The areal interpolation shows that most of the middle of the sound is experiecning a decrease with no real pattern showing different levels of change occurring in different parts of the Sound. There is an overall decrease in salinity, which can support the overall sea level rise trend.
 ```{r}
 #mapview
 
@@ -318,6 +318,28 @@ plot(invdistrmsk_sal, main = title_sal)
 #sf plot
 
 mast_sal_p <- plot(mast[8], axes = TRUE, cex = 1.75, pch = 10, main = "Salinity Change at Buoys", key.pos = 1, breaks = "quantile", key.width = lcm(1.25), key.length = 1.0) + scale_y_continuous(breaks = c(-2, -1.75, -1.50, -1.25, -1, -.75, -.50, -.25, 0, .25, .50, .75, 1, 1.25)) + theme(plot.title=element_text(face="bold", size=14))
+```
+Conductivity
+
+By looking at the mapview and areal interpolation of Conductivity change it can be seen that there is a mixture between increases and decreased in Conductivity, but overall more buoy points expereinced a decrease in Conductivity with 18 of the 29 points doing so. Also through the mapview it is seen that there were four buoy points that had a decreased in conductivity between .2 and .3 (S/m), while only two points had an increase of the same magnitude. Most of the areal interpolation indicates either consistency or a negative change of Conductivity with some positive values along the Narrows and a couple isolated ones elsewhere as shown in both maps. As most of the buoy temperatures experienced an increase in temperature it would be expected for Conductivity to do the same, since increasing the temperature of a solution will decrease viscosity, and increase the mobility of ions in the water thus decreasing conductivity (*Barron and Ahston*). But it is important to acknowledge that there are other factors that impact Conductivity.
+```{r}
+#mapview
+
+mapview_con
+
+#areal interpolation
+plot(invdistrmsk_con, main = title_con)
+```
+Density
+
+The mapview and areal interpolation show a general decrease in water density change. There are a few isolated spots where an increase occurs but overall a decrease trends is mostly indicated through the whole map as shown in the areal interpolation. On the areal interpolation it may indicate that there is more consistency or increase as some of the buoy points are more isolated than others giving them greater weight across the area of the Long Island Sound. But overall this is what would have been expected with increasing water temperatures at most buoy points since the density of water tends to increase as temperatures warm.
+```{r}
+#mapview
+
+mapview_den
+
+#areal interpolation
+plot(invdistrmsk_den, main = title_den)
 ```
 Individual Buoy Assessemnt
 
@@ -393,21 +415,67 @@ wcfall_c_p #cold water fish index
 wcspring_w_p #warm water fish index
 wcspring_c_p #cold water fish index
 ```
-4. Discussion (SA)
+4. Discussion (SA, KP)
 
 Dissolved Oxygen
 
-Widespread decrease in dissolved oxygen in natural water can have a detrimental affect on marine life, which filter oxygen through gills stay alive. The study notes that 5 mg/l can have a mildly detrimental affect on marine life, and levels below 1.5 mg/l can cause severe affects. Decreased levels of dissolved oxygen can reduce the abundance and diversity of adult fish, reduce their growth rate, reduce the abundance of especially slow-miving fish and shellfish like lobsters, and reduce their resistance to disease (*Hypoxia, The Problem*). However, the results from bC1 in the bC1_oxygen plot do not show widespread decreases in dissolved oxygen below 5 mg/l, which is good. However, it would be helpful if we had plotted averages in dissolved oxygen over the regions of interest for maximum time spans to smooth the data and chunk it into larger extents. We did not think about doing that at the beginning of the project.
+Widespread decrease in dissolved oxygen in natural water can have a detrimental affect on marine life, which filter oxygen through gills stay alive. The study notes that 5 mg/l can have a mildly detrimental affect on marine life, and levels below 1.5 mg/l can cause severe affects. Decreased levels of dissolved oxygen can reduce the abundance and diversity of adult fish, reduce their growth rate, reduce the abundance of especially slow-miving fish and shellfish like lobsters, and reduce their resistance to disease (*Hypoxia, The Problem*). As mapview and interpolation show there is more of a genearl decrease in dissoled oxygen levels, which is particularly prominent at points within the Narrows Region, with some areas of less DO change or positive DO change. However, the results from bC1 in the bC1_oxygen plot do not show widespread decreases in dissolved oxygen below 5 mg/l, which is good. However, it would be helpful if we had plotted averages in dissolved oxygen over the regions of interest for maximum time spans to smooth the data and chunk it into larger extents. We did not think about doing that at the beginning of the project.
 
 Temperature
 
 The lower the temperature of the water, the easier it is for oxygen molecules to diffuse with water. Water at 0 decrees celcius will hold 14.6 of oxygen per litre, but water at 30 degrees celcius will hold only 7.6 mg/L. Water temperaure change also affects the rate of photosynthesis in plants, reiliency to disease, and overall health and devleopment in aquatic life (*McCaffrey, n.d.*).
 
-The Long Island Sound study notes that the overall mean suface water temperautre in 1976 through 2015 was 3.9 degres elcius in the winter, 11.22 degrees celcius in the spring, 20.07 degrees celcius in the summer, and 12.24 degrees celciusn in the fall (*O'Donnell, n.d.*). However, most August months at bC1 was at over 20 degrees celcius, an indication that it is reaching past the upper threshold and expanding the range of temperatures, as well as increasing the overall temperatre. Though the trend in the region is understood, the over-simplicated methodology of temperature differencing from two points does not explain it well. Again, it would be better if we had used an aggregation method with more points and more times, taking the average temperautre over a span of time from the later time dates and subtracting it from that of the earlier time dates. It would also be helpful if the buoy data did not include large gaps in time, so in a later run we could only use datasets that are complete in this measure, and also use the same time scales and incriments. It would also be helpful if we had the ability to add trendlines to see a clearer and more concrete picture of the trend instead of simply conceptualizing it.
+The Long Island Sound study notes that the overall mean suface water temperautre in 1976 through 2015 was 3.9 degres elcius in the winter, 11.22 degrees celcius in the spring, 20.07 degrees celcius in the summer, and 12.24 degrees celcius in the fall (*O'Donnell, n.d.*). The general mapview and areal interpolation showed that there were mostly areas of increased temperature across the Sound with some buoy points having almost consistent temps, or a slight decrease in temperatures. This may indicate that temperatures are warming across the Sound, particularly areaas closer to the Narrows, and some other isolated points throughout the Sound. However, most August months at bC1 was at over 20 degrees celcius, an indication that it is reaching past the upper threshold and expanding the range of temperatures, as well as increasing the overall temperatre. Though the trend in the region is understood, the over-simplicated methodology of temperature differencing from two points does not explain it well. Again, it would be better if we had used an aggregation method with more points and more times, taking the average temperautre over a span of time from the later time dates and subtracting it from that of the earlier time dates. It would also be helpful if the buoy data did not include large gaps in time, so in a later run we could only use datasets that are complete in this measure, and also use the same time scales and incriments. It would also be helpful if we had the ability to add trendlines to see a clearer and more concrete picture of the trend instead of simply conceptualizing it.
 
 Salinity
 
-An appropriate concentration of salinity is important for aquatic plants and aniamls in any watershed, and salinity beyond the normal range for any species can be highly detrimental to their health. Salinity also affects the avaliability of  nutrients to enter plant roots (*McCaffrey, n.d.*). The eastern end of the sound should have 35 parts per thousand in salinity and the western should have 25 (*Long Island Sound By the Numbers*). The salinity at bC1 ranges between 23.11 and 29.05 PSU, which overall is a little high. However, the measurments were all taken during the summer, when there is a tendency for the Sound water to evaporate more. Again, we cannot realistically link changes in climatic condiditons in this region to the time differencing values here, so we cannot link changes in precipitation and water turbidity to peaks in salinity to conclude with. In the future, it would be great to compare these results to similar ones from another region with differnt climatic conditions. Maybe, a region with more variables rainfal would give us a better picture of salinity change of a region with different climatic conditions.
+An appropriate concentration of salinity is important for aquatic plants and aniamls in any watershed, and salinity beyond the normal range for any species can be highly detrimental to their health. Salinity also affects the avaliability of  nutrients to enter plant roots (*McCaffrey, n.d.*). The eastern end of the sound should have 35 parts per thousand in salinity and the western should have 25 (*Long Island Sound By the Numbers*). The salinity at bC1 ranges between 23.11 and 29.05 PSU, which overall is a little high. However, the measurments were all taken during the summer, when there is a tendency for the Sound water to evaporate more. Again, we cannot realistically link changes in climatic condiditons in this region to the time differencing values here, so we cannot link changes in precipitation and water turbidity to peaks in salinity to conclude with. Although in the mapview and areal interpolations there are increases in salinity overall with most buoy points experiecning an increase, with some isolated points having a small decrease. But the different can contribute to the times of year this data points were collected as evaportation can play a role in the amount of salinity. In the future, it would be great to compare these results to similar ones from another region with differnt climatic conditions. Maybe, a region with more variables rainfall would give us a better picture of salinity change of a region with different climatic conditions.
+
+Conductivity
+
+This variable was looked at through the maps. But as indicated in the results section there was a general decrease in Conductivity across the Sound. As the data did show a temperature increase overtime at most buoy points it would be expected for overall Conductivity to increase as well (*Barron and Ashton*). It would be valuable for future reference to continue looking at where Conductivity is increasing and decreasing. By looking at mapview and areal interpolation it was seen that more of the increases occurred in the Narrows Region of the Long Island Sound, while it appeared that more of the decreasing values were at buoys out in the middle of the Sound. This could also be indicative of the amount of pollution that is entering the Long Island Sound, as the increase of dissolved solids in water will increase conductivity (*EPA*). If pollution in the Sound was signficant enough to be impacting conductivity on the Sound, than that would mean the Narrows Region would be most impacted by pollution as it is experiencing the greatest increases of Conducitivity. This would be something interesting to examine in the future. Also changes in Conductivity showed relatively the same patterns in certain areas that temperature experienced when looking at the areal interpolation, meaning temperature may have impacted how much Conductivity increased or decreased to an extent. It would be interesting to look at temperatures role in Conductivity as well as other impacts such as pollution to see if warming of the Earth or pollution is making a bigger impact on Conductivity levels on the Sound.
+
+Density
+
+Overall there was shown to be a decrease in water density for the most part across the Long Island Sound which is expected with temperature increase. The areal interpolation shows that there is a general decrease across the Sound, with few areas of density consistency or increase. The mapview does a better job showing that most points have negative density changes with a few isolated spots of positive change occurring with no real pattern. With as many points that experienced temperature increase it is expected to see water density decrease due to water expanding as a result of warmer temperatures (*Temperature Effects on Density*). As temepratures are expected to generally rise due in the Long Island Sound to warming of the Earth (*What you Should Know*), it would be interesting to see if water desnity will continute to show a general decrease.
+
 Other Indexes
 
-The warm and cold-water fish index graphs in wcfall_w_p, wcfall_c_p, wcspring_w_p, and wcspring_c_p are the most expressive of water quality change. It is clear that warmer fish are finding the region more suitable, and colder fish are finding the region less suitable. The stuy's website suggests that there have been shifts in migratory patterns in fish as surface water temperature warm, with both death and steady decline in abundance of cold-water fish like lobster and winter flounder, and steady migration and prosperation of warm-water fish like summer flounder (*What you Should Know*).  Though we do not include economic data in this research, it would be interesting in the future to follow economci trends of harvest for both winter and summer flounder, or another compatable warm/cold pairing of fish. This can have some affect on the local fishing economy and link to overall economic health of the region, one of the main indicators of changing Long Island Sound health noted online.
+The warm and cold-water fish index graphs in wcfall_w_p, wcfall_c_p, wcspring_w_p, and wcspring_c_p are the most expressive of water quality change. It is clear that warmer fish are finding the region more suitable, and colder fish are finding the region less suitable. The study's website suggests that there have been shifts in migratory patterns in fish as surface water temperature warm, with both death and steady decline in abundance of cold-water fish like lobster and winter flounder, and steady migration and prosperation of warm-water fish like summer flounder (*What you Should Know*).  Though we do not include economic data in this research, it would be interesting in the future to follow economci trends of harvest for both winter and summer flounder, or another compatable warm/cold pairing of fish. This can have some affect on the local fishing economy and link to overall economic health of the region, one of the main indicators of changing Long Island Sound health noted online.
+
+
+7. References (SA, KP)
+
+About the Long Island Sound Study. (n.d.). Retrieved May 4, 2019, from http://longislandsoundstudy.net/about/about-the-study/
+
+Barron, J. J., & Ashton, C. (n.d.). The Effect of Temperature on Conductivity Measurement. Retrieved from https://www.camlab.co.uk/originalimages/sitefiles/Tech_papers/TempCondMeas.pdf.
+
+Department of Environmental Protection, Long Island Sound Water Quality Monitoring. (2014, August 21). Retrieved May 4, 2019, from https://www.ct.gov/deep/cwp/view.asp?a=2719&q=325534&deepNav_GID=1654
+
+EPA. (2016, August 16). Retrieved from https://www.epa.gov/national-aquatic-resource-surveys/indicators-conductivity
+
+Howell, P., & Gottschall, K. (2017). Status and Trends: LISS Environmental Indicators. Retrieved May 4, 2019, from http://longislandsoundstudy.net/indicator/warm-watercold-water-fish-index/
+
+Hypoxia, The Problem. (n.d.). Retrieved May 4, 2019, from http://longislandsoundstudy.net/about/our-mission/management-plan/hypoxia/
+
+Long Island Sound By the Numbers. (n.d.). Retrieved May 4, 2019, from http://longislandsoundstudy.net/about-the-sound/by-the-numbers/
+
+Long Island Sound Coastal Observatory Historical Data Access. (n.d.). Retrieved May 4, 2019, from http://lisicos.uconn.edu/data_stn.php
+
+Long Island Sound Monitoring Stations About Basemap Gallery Layer List. (n.d.). Retrieved May 4, 2019, from http://ctdeep.maps.arcgis.com/apps/webappviewer/index.html?id=f3fb1bb862fc4781ab2561f348bc3d0c
+
+Long Island Sound Study. (n.d.). Retrieved May 4, 2019, from http://longislandsoundstudy.net/research-monitoring/liss-ecosystem-targets-and-supporting-indicators/
+
+Long Island Sound Report Card. (2019). Retrieved May 4, 2019, from https://www.ctenvironment.org/report-card
+
+McCaffrey, S. (n.d.). WATER QUALITY PARAMETERS & INDICATORS. Retrieved May 4, 2019, from https://sswm.info/sites/default/files/reference_attachments/MCCAFFREY ny Water Quality Parameters & Indicators.pdf
+
+O'Donnell, J. (n.d.). Water Temperature. Retrieved May 4, 2019, from http://longislandsoundstudy.net/ecosystem-target-indicators/water-temperature/
+
+Prabhakaran, S. (2017). R-statistics.co. Retrieved May 4, 2019, from http://r-statistics.co/Loess-Regression-With-R.html
+
+Temperature Effects on Density. (n.d.). Retrieved from http://butane.chem.uiuc.edu/pshapley/GenChem1/L21/2.html
+
+Water Quality Monitoring. (n.d.). Retrieved May 4, 2019, from http://longislandsoundstudy.net/research-monitoring/water-quality-monitoring/
+
+What You Should Know. (n.d.). Retrieved May 4, 2019, from http://lissclimatechange.net/what-you-should-know/#collapse6
