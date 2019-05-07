@@ -54,10 +54,11 @@ library(raster)
 We develop a "mastersheet" with coordinate points at 29 buoy locations, and water quality change for the temperature, dissolved oxygen, and salinity indicators calculated from measurements at two dates spanning at least 10 years and at the same time of year, during the summers. We import this sheet as a csv file from our working directory, and add coordinates as an sf oject. This data should be downloaded into the given local directory from the code above, but this is the code we use to upload data locally. We also delete NA values and change the names of the data. (SA)
 ```{r}
 library(longisland)
-system.file("extdata/Mastersheet.csv", package = "longisland")
 ```
 ```{r}
-mastersheet <- readr::read_csv(system.file("extdata/Mastersheet.csv", package = "longisland")) %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
+mastersheet <- readr::read_csv(
+  system.file("extdata/Mastersheet.csv", package = "longisland")) %>%
+  st_as_sf(., coords = c("long", "lat"), crs = 4326)
 mastersheet_na.omit <- na.omit(mastersheet)
 mast <- mastersheet_na.omit
 ```
@@ -89,47 +90,58 @@ mapview_den
 ```
 We now create an aerial interpolation to better have a better visual of what areas of the Long Island Sound may have higher or lower values of each change that is being examined at all 29 buoy points. To do this we are using the Mastersheet data as the extent of our raster data. Mastersheet_New.csv is the same file as Mastersheet.csv, the only difference is on Mastersheet_New.csv I had to change the column name "Conductivity Change" to "Con_Change", and all other variables to "abbrevation_change" because aerial interpolation would not run if there was a space in the column name. For each interpolation I used data of the US outline from getData and then performed an inverse mask on it to allow the interpolation to only cover areas not on US land. In this case it was the Long Island Sound. Using this feature allows us to examine the general pattern of change throughout the Long Island Sound for each variable, and have a better idea where lower or higher values of change are occurring. (KP). 
 ```{r}
-system.file("extdata/Mastersheet_new.csv", package = "longisland")
-read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland"))
-mastersheet_new <- readr::read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland")) %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
+mastersheet_new <- readr::read_csv(
+  system.file("extdata/Mastersheet_new.csv", package = "longisland")) %>% 
+  st_as_sf(., coords = c("long", "lat"), crs = 4326)
 r <- raster(extent(mastersheet_new), res = 0.03)
-US_Data <- getData('GADM', country='USA', level= 0)
+US_Data <- getData('GADM', country='USA', level=0) %>% st_as_sf
+# US_Data %>% st_as_sf %>% 
+#   filter(NAME_1 %in% c("New York", "Connecticut", "New Jersey")) -> US_Data 
+# US_Data %>% st_geometry %>% plot(col = "grey")
+US_Data <- st_crop(US_Data, st_bbox(mastersheet_new)) %>% as_Spatial
 ```
 ```{r}
+<<<<<<< HEAD
 system.file("extdata/Mastersheet_new.csv", package = "longisland")
 dat <- read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland"))
 mastersheet_new <- readr::read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland")) %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
+=======
+dat <- mastersheet_new %>% as_tibble %>% 
+  select(-geometry) %>% 
+  bind_cols(., mastersheet_new %>% st_coordinates %>% as_tibble) %>% 
+  rename(x = X, y = Y)
+>>>>>>> 2a264ba84a0d451bc2467b21d85f5e29ab7cb810
 invdistdo <- gstat(formula = Do_change ~ 1, locations = ~x + y, data = dat)
 invdistrdo <- interpolate(object = r, model = invdistdo)
-invdistrmsk_do <- mask(x = invdistrdo, mask = US_data, inverse = TRUE)
+invdistrmsk_do <- mask(x = invdistrdo, mask = US_Data, inverse = TRUE)
 title_do <- c("Dissolved Oxygen Change (kg/m^3)")
 plot(invdistrmsk_do, main = title_do)
 ```
 ```{r}
 invdistsal <- gstat(formula = Sal_change ~ 1, locations = ~x + y, data = dat)
 invdistrsal <- interpolate(object = r, model = invdistsal)
-invdistrmsk_sal <- mask(x = invdistrsal, mask = US_data, inverse = TRUE)
+invdistrmsk_sal <- mask(x = invdistrsal, mask = US_Data, inverse = TRUE)
 title_sal <- c("Salinity Change (PSU)")
 plot(invdistrmsk_sal, main = title_sal)
 ```
 ```{r}
 invdisttemp <- gstat(formula = Temp_change ~ 1, locations = ~x + y, data = dat)
 invdistrtemp <- interpolate(object = r, model = invdisttemp)
-invdistrmsk_temp <- mask(x = invdistrtemp, mask = US_data, inverse = TRUE)
+invdistrmsk_temp <- mask(x = invdistrtemp, mask = US_Data, inverse = TRUE)
 title_temp <- c("Temperature Change (Fahrenheit)")
 plot(invdistrmsk_temp, main = title_temp)
 ```
 ```{r}
 invdistcon <- gstat(formula = Con_change ~ 1, locations = ~x + y, data = dat)
 invdistrcon <- interpolate(object = r, model = invdistcon)
-invdistrmsk_con <- mask(x = invdistrcon, mask = US_data, inverse = TRUE)
+invdistrmsk_con <- mask(x = invdistrcon, mask = US_Data, inverse = TRUE)
 title_con <- c("Conductivity Change (S/m)")
 plot(invdistrmsk_con, main = title_con)
 ```
 ```{r}
 invdistden <- gstat(formula = Den_change ~ 1, locations = ~x + y, data = dat)
 invdistrden <- interpolate(object = r, model = invdistden)
-invdistrmsk_den <- mask(x = invdistrden, mask = US_data, inverse = TRUE)
+invdistrmsk_den <- mask(x = invdistrden, mask = US_Data, inverse = TRUE)
 title_den <- c("Density Change (kg/m^3)")
 plot(invdistrmsk_den, main = title_den)
 ```
@@ -147,7 +159,12 @@ bI2
 To look at the change in the indicator values, we first create a gpplot of the bC1 buoy at The Narrows to show the dissolved oxygen, temperature, and salinity change over time. This buoy time period spans between December 05, 1994 and November 06, 2017, and has 434 points. We create asthtics for the plot, but keep it relatively simple. Here is an example of a code chunk: (SA)
 ```{r}
 bC1_oxygen <- ggplot(bC1, aes(newdate, oxygen, fill = group)) +
-geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + xlab("Date") + ylab("Dissolved Oxygen") + ggtitle( "Dissolved Oxygen at bC1") + theme_light() +labs(subtitle = "Oxygen in mg/L", caption = "Enought dissolved oxygen content is an important indicator of good water quality") + theme(plot.title=element_text(face="bold", size=14))
+  geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + 
+  xlab("Date") + ylab("Dissolved Oxygen") + ggtitle( "Dissolved Oxygen at bC1") +
+  theme_light() +
+  labs(subtitle = "Oxygen in mg/L", 
+       caption = "Enought dissolved oxygen content is an important indicator of good water quality") + 
+  theme(plot.title=element_text(face="bold", size=14))
 bC1_oxygen
 ```
 We do the same process for b16 at the Western Basin, b28 at the Central Basin, and bJ2 at the Eastern Basin, and the chunk of code to plot dosn't change much except for the input data and output names, as well as title and caption information. (SA)
