@@ -1,41 +1,34 @@
 ---
 title: "Long Island Sound Project"
-authors: "Kyle Pecsok" "Sophie Aronow"
+authors: "Kyle Pecsok, Sophie Aronow"
 date: "05/07/2019"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{Final Project LongIsland Water Quality}
- %\VignetteEngine{knitr::rmarkdown}
- %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Final Project LongIsland Water Quality}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Works perfectly and gives us results that contain everything we need to evaluate the project. Datasets that are too large to be committed to the package repo should be linked to, but the code used to process them should be clear, and any figures built from them should be committed to the repo and incorporated in your package vignettes. Vignettes will contain the material we are most interested in, but we will also examine your DESCRIPTION, NAMESPACE, function documentation (if applicable), i.e. the key components of making an R package and delivering it in a reproducible manner. 
-
-Jointly authored vignettes in group projects should have team member initials indicating which section each member worked on which section. Otherwise, separately authored ones should have team member titles at the top.  
-
-As stated before, if there are clear, separable tasks that lend themselves to separate development efforts, team members should work on those and make frequent commits within their own repo branches. 
-
 R code should follow the [style](http://adv-r.had.co.nz/Style.html) we have been using all along. 
 
 1. Introduction (SA)
 
-The Long Island Sound Study in Connecticut, New York, and Road Island serves as a new robust and localized case study to learn from and possibly improve. It is a "bi-state partnership" that includes networks with federal and state agencies, user goups, organizations, and individuals that are concerned with the health of the Sound (*About the Long Island Sound Study*). The study uses Ecosystem Indicators measuements to assess the health of the Lond Island Sound ecosystem among climate change impacts like sea level rise, temperature change, and ocean acidification (*What You Should Know*). The main indicators fall into categories on waters and watersheds, habitats and wildlife, and community sustainability and resilience. Because of the broad effects of climate change to the region, quantitative indicators relate to a range of topics, those including physical, biological, chemical, and socioeconomic (*LISS Ecosystem Targets and Supporting Indicators*). Physical measurements like temperature and slinity of water can be used to track water mass movements. These indicators and the level of dissolved oxygen can indicate how suitable the water is for marine life. Other chemical and biological analyses on animal tissue can indicate what chemicals and biological material is present in the water, including contaminents. Minitoring of water and sampling of species can occure on a continuous, temportary, seaosnal, or emergency basis. Many buoy locations where monitoring occurs happens at different intervals and time rnages, which affects this analysis (*Water Quality Monitoring*).
+The Long Island Sound Study in Connecticut, New York, and Road Island serves as a new robust and localized case study to learn from and possibly improve. It is a "bi-state partnership" that includes networks with federal and state agencies, user goups, organizations, and individuals that are concerned with the health of the Sound (*About the Long Island Sound Study*). The study uses Ecosystem Indicators measuements to assess the health of the Lond Island Sound ecosystem among climate change impacts like sea level rise, temperature change, and ocean acidification (*What You Should Know*). The main indicators fall into categories on waters and watersheds, habitats and wildlife, and community sustainability and resilience. Because of the broad effects of climate change to the region, quantitative indicators relate to a range of topics, those including physical, biological, chemical, and socioeconomic (*LISS Ecosystem Targets and Supporting Indicators*). Physical measurements like temperature and salinity of water can be used to track water mass movements. These indicators and the level of dissolved oxygen can indicate how suitable the water is for marine life. Other chemical and biological analyses on animal tissue can indicate what chemicals and biological material is present in the water, including contaminents. Minitoring of water and sampling of species can occure on a continuous, temportary, seaosnal, or emergency basis. Many buoy locations where monitoring occurs happens at different intervals and time rnages, which affects this analysis (*Water Quality Monitoring*).
 
-Water quality indicators used here include surface temperature, dissolved oxygen, and salinity. We focus on these metrics because we understand them better and because of time and scope contraints. The measurments come from the Water Quality Monitoring Program from the Connecticut Department of Energy and Environmental Protection on behalf of the study (*Department of Environmental Protection*). A helpful map to get a sense of the study area can be found here (*Long Island Sound Monitoring Stations...*). This map shows where the four main regions of the study. From west to east these regions are The Narrows, Western Sound, Central Sound, and Eastern Sound. Notice that The Narrows is losets to New York City, the Western Sound is closest to Bridgeport and other populated areas, and the Central and Eastern Sound are located between less-populated regions (*Long Island Sound Report Card*). Here is a mapview map of the study area color coded by region:
+Water quality indicators used here include surface temperature, dissolved oxygen, and salinity. We focus on these metrics because we understand them better and because of time and scope contraints. The measurments come from the Water Quality Monitoring Program from the Connecticut Department of Energy and Environmental Protection on behalf of the study (*Department of Environmental Protection*). A helpful map to get a sense of the study area can be found here (*Long Island Sound Monitoring Stations...*). This map shows where the four main regions of the study. From west to east these regions are The Narrows, Western Sound, Central Sound, and Eastern Sound. Notice that The Narrows is losets to New York City, the Western Sound is closest to Bridgeport and other populated areas, and the Central and Eastern Sound are located between less-populated regions (*Long Island Sound Report Card*). 
+
+(KP)
+The data that is presented in this project is meant to provide us with valuable information about certain variables that may impactthe water quality of the Long Island Sound as mentioned before. To help look at and examine these qualities we will examine the different buoy points and the amount of change they experienced in terms of density, conductivity, temperature, salinity, and dissolved oxygen. There are 29 buoy points located along the Sound that was collected and we will examine for this project. 
 
 #2. Methods
 
 We first load all the libraries we need, and even a little extra just in case we need them. (SA)
 
-```{r}
-library(mapview)
-mapview_study_regions <- mapview(mastersheet, zcol = "Region", legend = TRUE)
-mapview_study_regions
-```
+
 We assess in detail the dissolved oxygen, temperature, and salinity indicators at four selected buoy locations and reiterate their significance, and create graphical ouptuts to accompany the study's online graphics and information. We include some statstical analysis: descriptive statistics, correlation, variance, and regression to explain the chosen indicators at the four buoys. We also include water quality index metrics, shellfish harvest data, and fish abundance data to illistrate the health of the sound. We also elaborate on consider data and time limitations and ways in which this project could improve in the future.
 ```{r, loading libraries}
 library(devtools)
@@ -64,26 +57,22 @@ library(utils)
 library(knitr)
 library(gstat)
 library(raster)
-#We develop a "mastersheet" with coordinate points at 29 buoy locations, and water quality change for the temperature, dissolved oxygen, and salinity indicators calculated from measurements at two dates spanning at least 10 years and at the same time of year, during the summers. We import this sheet as a csv file from our working directory, and add coordinates as an sf oject. This data should be downloaded into the given local directory from the code above, but this is the code we use to upload data locally. We also delete NA values and change the names of the data. (SA)
+```
+We develop a "mastersheet" with coordinate points at 29 buoy locations, and water quality change for the temperature, dissolved oxygen, and salinity indicators calculated from measurements at two dates spanning at least 10 years and at the same time of year, during the summers. We import this sheet as a csv file from our working directory, and add coordinates as an sf oject. This data should be downloaded into the given local directory from the code above, but this is the code we use to upload data locally. We also delete NA values and change the names of the data. (SA)
+```{r}
+library(longisland)
+system.file("extdata/Mastersheet.csv", package = "longisland")
 ```
 ```{r}
-library(mapview)
-mapview_study_regions <- mapview(mastersheet, zcol = "Region", legend = TRUE)
-mapview_study_regions
-#The main item in your package that we will assess is/are the package vignette/vignettes. 
-```
-
-
-```{r}
-#setwdsetwd <- ("C:/Users/kylepecsok/Geog246/longisland/")
-mastersheet <- readr::read_csv("Mastersheet.csv") %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
-
+mastersheet <- readr::read_csv(system.file("extdata/Mastersheet.csv", package = "longisland")) %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
 mastersheet_na.omit <- na.omit(mastersheet)
-
 mast <- mastersheet_na.omit
 ```
+To map, we first use the mapview function from the mapview package to view the data on an interactive display with a proper map of the Long Island Sound as a background extent. As an x + y coordinate is provided for each buoy point, the exact location is presented in the mapview. For each different mapview there is a different column is taken from Mastersheet.csv. As each column provides data for a certain variable, each mapview represents buoy location data associated with a variable (eg, Dissolved Oxygen Change). When making these mapviews we add a new sequence and a legend, and keep the colors as the defualt as shown below. These maps will allow us to see where the buoys are located along the sound and the distribution of the variables. (KP)
 ```{r}
-#To map, we first use the mapview function in the mapview package to view the data on an interactive display with a proper map of the Long Island Sound area as a background extent. We add new sequence and a legend, and keep the colors as the defualt. For example:  (KP)
+library(mapview)
+mapview_study_regions <- mapview(mast, zcol = "Region", legend = TRUE)
+mapview_study_regions
 ```
 ```{r}
 mapview_ox <- mapview(mast, zcol = "Dissolved Oxygen Change (mg/L)", at = seq(-3, 4, 1), legend = TRUE)
@@ -105,60 +94,104 @@ mapview_con
 mapview_den <- mapview(mast, zcol = "Density Change (kg/m^3)", at = seq(-1.2, 0.6, 0.3), legend = TRUE)
 mapview_den
 ```
+We now create an aerial interpolation to better have a better visual of what areas of the Long Island Sound may have higher or lower values of each change that is being examined at all 29 buoy points. To do this we are using the Mastersheet data as the extent of our raster data. Mastersheet_New.csv is the same file as Mastersheet.csv, the only difference is on Mastersheet_New.csv I had to change the column name "Conductivity Change" to "Con_Change", and all other variables to "abbrevation_change" because aerial interpolation would not run if there was a space in the column name. For each interpolation I used data of the US outline from getData and then performing an inverse mask on it to allow the interpolation to only cover areas not on US land. In this case it was the Long Island Sound. Using this feature allows us to examine the general pattern of change throughout the Long Island Sound for each variable, and have a better idea where lower or higher values of change are occurring. (KP). 
 ```{r}
-#We create a sf plot in addition, but it does not explain the extent as well as the mapview and is not interactive. However it is interesting to see and easy to interpret. We index the mastersheet by column first to split the dataframe, or index by column. We change the astletics and make quantile breaks with unique break incriments for the lengend for the dissolved oxygen, temperautre, and salinity seperatly. For example: (SA)
+system.file("extdata/Mastersheet_New.csv", package = "longisland")
+read_csv(system.file("extdata/Mastersheet_New.csv", package = "longisland"))
+mastersheet_new <- readr::read_csv(system.file("extdata/Mastersheet_New.csv", package = "longisland")) %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
+r <- raster(extent(mastersheet_new), res = 0.03)
+US_Data <- getData('GADM', country='USA', level= 0)
 ```
+```{r}
+invdistdo <- gstat(formula = Do_change ~ 1, locations = ~x + y, data = dat)
+invdistrdo <- interpolate(object = r, model = invdistdo)
+invdistrmsk_do <- mask(x = invdistrdo, mask = US_data, inverse = TRUE)
+title_do <- c("Dissolved Oxygen Change (kg/m^3)")
+plot(invdistrmsk_do, main = title_do)
+```
+```{r}
+invdistsal <- gstat(formula = Temp_change ~ 1, locations = ~x + y, data = dat)
+invdistrsal <- interpolate(object = r, model = invdistsal)
+invdistrmsk_sal <- mask(x = invdistrsal, mask = US_data, inverse = TRUE)
+title_sal <- c("Salinity Change (PSU)")
+plot(invdistrmsk_sal, main = title_sal)
+```
+```{r}
+invdisttemp <- gstat(formula = Temp_change ~ 1, locations = ~x + y, data = dat)
+invdistrtemp <- interpolate(object = r, model = invdisttemp)
+invdistrmsk_temp <- mask(x = invdistrtemp, mask = US_data, inverse = TRUE)
+title_temp <- c("Temperature Change (Fahrenheit)")
+plot(invdistrmsk_temp, main = title_temp)
+```
+```{r}
+invdistcon <- gstat(formula = Con_change ~ 1, locations = ~x + y, data = dat)
+invdistrcon <- interpolate(object = r, model = invdistcon)
+invdistrmsk_con <- mask(x = invdistrcon, mask = US_data, inverse = TRUE)
+title_con <- c("Conductivity Change (S/m)")
+plot(invdistrmsk_con, main = title_con)
+```
+```{r}
+invdistden <- gstat(formula = Den_change ~ 1, locations = ~x + y, data = dat)
+invdistrden <- interpolate(object = r, model = invdistden)
+invdistrmsk_den <- mask(x = invdistrden, mask = US_data, inverse = TRUE)
+title_den <- c("Density Change (kg/m^3)")
+plot(invdistrmsk_den, main = title_den)
+```
+We create a sf plot in addition, but it does not explain the extent as well as the mapview and is not interactive. However it is interesting to see and easy to interpret. We index the mastersheet by column first to split the dataframe, or index by column. We change the astletics and make quantile breaks with unique break incriments for the lengend for the dissolved oxygen, temperautre, and salinity seperatly. For example: (SA)
 ```{r}
 mast_sal_p <- plot(mast[8], axes = TRUE, cex = 1.75, pch = 10, main = "Salinity Change at Buoys", key.pos = 1, breaks = "quantile", key.width = lcm(1.25), key.length = 1.0) + scale_y_continuous(breaks = c(-2, -1.75, -1.50, -1.25, -1, -.75, -.50, -.25, 0, .25, .50, .75, 1, 1.25)) + theme(plot.title=element_text(face="bold", size=14))
 ```
+Data on water quality change is extracted at individual buoy locations in the analysis from The Narrows, the Western Sound, the Central Sound, and the Eastern Sound (*Long Island Sound Coastal Observatory...*). We use 13 individual buoy locations. Some points from the mastersheet do not have complete data between time periods. (SA)
 ```{r}
-#Data on water quality change is extracted at individual buoy locations in the analysis from The Narrows, the Western Sound, the Central Sound, and the Eastern Sound (*Long Island Sound Coastal Observatory...*). We use 13 individual buoy locations. Some points from the mastersheet do not have complete data between time periods. (SA)
-```
-```{r}
-BI2 <- readr::read_csv("I2.csv")
+BI2 <- readr::read_csv(system.file("extdata/I2.csv", package = "longisland")) 
 BI2_na.omit <- na.omit(BI2)
 bI2 <- BI2_na.omit
 bI2
 ```
-```{r}
-#To look at the change in the indicator values, we first create a gpplot of the bC1 buoy at The Narrows to show the dissolved oxygen, temperature, and salinity change over time. This buoy time period spans between December 05, 1994 and November 06, 2017, and has 434 points. We create asthtics for the plot, but keep it relatively simple. Here is an example of a code chunk: (SA)
-```
+To look at the change in the indicator values, we first create a gpplot of the bC1 buoy at The Narrows to show the dissolved oxygen, temperature, and salinity change over time. This buoy time period spans between December 05, 1994 and November 06, 2017, and has 434 points. We create asthtics for the plot, but keep it relatively simple. Here is an example of a code chunk: (SA)
 ```{r}
 bC1_oxygen <- ggplot(bC1, aes(newdate, oxygen, fill = group)) +
 geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + xlab("Date") + ylab("Dissolved Oxygen") + ggtitle( "Dissolved Oxygen at bC1") + theme_light() +labs(subtitle = "Oxygen in mg/L", caption = "Enought dissolved oxygen content is an important indicator of good water quality") + theme(plot.title=element_text(face="bold", size=14))
 bC1_oxygen
 ```
-```{r}
-#We do the same process for b16 at the Western Basin, b28 at the Central Basin, and bJ2 at the Eastern Basin, and the chunk of code to plot dosn't change much except for the input data and output names, as well as title and caption information. (SA)
+We do the same process for b16 at the Western Basin, b28 at the Central Basin, and bJ2 at the Eastern Basin, and the chunk of code to plot dosn't change much except for the input data and output names, as well as title and caption information. (SA)
 
-#We produce complimentary statistical analysis for the four buoy points we graphed earlier in ggplot. We use the summary function to find the minimum, 1st quartile, median, mean, 3rd quartile, and maximum values from the dissolved oxygen, temperautre, and salinity columns. We take the values produced to create a new dataframe with three columns for summary type (minimum, Q1, etc), water quality (dissolved oxygen, temperautre, salinity) and value (summary value). here is an example chunk of code for that: (SA)
-```
+We produce complimentary statistical analysis for the four buoy points we graphed earlier in ggplot. We use the summary function to find the minimum, 1st quartile, median, mean, 3rd quartile, and maximum values from the dissolved oxygen, temperautre, and salinity columns. We take the values produced to create a new dataframe with three columns for summary type (minimum, Q1, etc), water quality (dissolved oxygen, temperautre, salinity) and value (summary value). here is an example chunk of code for that: (SA)
 ```{r}
 summarybC1df <- data.frame(SummType = rep(c("Min", "Q1", "Med", "Mean", "Q3", "Max"), each = 3), WaterQual = rep(c("Oxygen", "Temp", "Sal"), 6), Value = c(5.235, -0.585, 23.11, 8.193, 5.485, 25.66, 9.470, 13.556, 26.61, 9.615, 13.233, 26.59, 10.995, 21.071, 27.49, 14.386, 25.762, 29.05))
 
 summarybC1df
 ```
+We then make sure that these columns are of the factor type, using the as.factor function for the SummType column: (SA).
 ```{r}
-#We then make sure that these columns are of the factor type, using the as.factor function for the SummType column: (SA).
 summarybC1df$SummType <- as.factor(summarybC1df$SummType)
-#We then reorder these factors to force a conceptually resonable order. We do not rename the dataframe: (SA)
+```
+We then reorder these factors to force a conceptually resonable order. We do not rename the dataframe: (SA)
+```{r}
 summarybC1df$SummType <- factor(summarybC1df$SummType, levels=c("Min", "Q1", "Med", "Mean", "Q3", "Max"))
 
 summarybC1df$SummType
-#We then create a bar graph with asthetics (SA).
-
+```
+We then create a bar graph with asthetics (SA).
+```{r}
 summary_bC1_bar <- ggplot(data = summarybC1df, aes(x = WaterQual, y = Value, fill = SummType)) + geom_bar(stat = "identity", position = position_dodge()) + ggtitle("Summary of Descriptive Stats at bC1") + theme(plot.title = element_text(face="bold", size=14)) + scale_fill_manual(values=c("#33CCCC", "#33CC00", "#996633", "#33FFFF", "#336600", "#CC9933"))
 
 summary_bC1_bar
-#In addition to creating a bar graph outlining summary statistics for the four buoy points, we take a look at correlation and variance between these indicators by using simple code from the cor and var functions. We first create a new dataframe to use for correlation and remove unnecesary columns: (SA)
+```
+In addition to creating a bar graph outlining summary statistics for the four buoy points, we take a look at correlation and variance between these indicators by using simple code from the cor and var functions. We first create a new dataframe to use for correlation and remove unnecesary columns: (SA)
+```{r}
 bC1_cor<- dplyr::select(bC1, -ID, -date, -newdate, -depthcode, -biosil, -den)
 
 bC1_cor
-#We then find the correlation (pearson) and variance between the three indicators. We add three variance functions with different index values or names (depending on the data type):  (SA)
+```
+We then find the correlation (pearson) and variance between the three indicators. We add three variance functions with different index values or names (depending on the data type):  (SA)
+```{r}
 cor(bC1_cor, use = "complete.obs", method = "pearson")
 
 var(bC1_cor[1], y = bC1_cor[2], na.rm = TRUE, use = "complete.obs")
-#We create a new dataframe, order it, and plot it as a bar graph to explain visually and be easier to interpret. The framework is the same for creating bargraphs for the summary statistics section.  (SA)
+```
+We create a new dataframe, order it, and plot it as a bar graph to explain visually and be easier to interpret. The framework is the same for creating bargraphs for the summary statistics section.  (SA)
+```{r}
 bC1_cordf <- data.frame(corType = rep(c("Variance", "Correlation"), each = 3), Comparison = rep(c("OxTemp", "TempSal", "OxSal"), 2), Value = c(-.655, -10.776, .002, .016, .118, .016))
 
 bC1_cordf
@@ -169,12 +202,13 @@ bC1_cor_bar <- ggplot(data = bC1_cordf, aes(x = Comparison, y = Value, fill = co
     theme(plot.title = element_text(face="bold", size=14)) + scale_fill_manual(values=c("#33CCCC", "#33CC00"))
 
 bC1_cor_bar
-#We then take a quick look as some functions that show more advanced metircs on the indicators, but we do not really need to investigate this for the analysis. The lm function conveniently plots four outputs that take a little time to interpret, but are essy to produce. Though we do not go into these plots in depth, they do expres this kind of inconsistency and lack of correlation between variables that we see in the bar graphs above. The scatter.smooth function create a scatterplot of two independent variables, which I create for one buoyfor the dissolved oxygen indicator ~ temperature just to display: (SA)
 ```
-
+We then take a quick look as some functions that show more advanced metircs on the indicators, but we do not really need to investigate this for the analysis. The lm function conveniently plots four outputs that take a little time to interpret, but are essy to produce. Though we do not go into these plots in depth, they do expres this kind of inconsistency and lack of correlation between variables that we see in the bar graphs above. The scatter.smooth function create a scatterplot of two independent variables, which I create for one buoyfor the dissolved oxygen indicator ~ temperature just to display: (SA)
 ```{r}
 scatter.smooth(x = b16$oxygen, y = b16$temp, main = "Oxygen ~ Temperature", pch = 19, cex = .75, col = "#33CCCC") +  theme(plot.title=element_text(face="bold", size=14))
-#The loess.smooth function smooths "volatile" time sies. A least squares regression is performed on on "localized subsets", so it shows the smoothed version of the regression from above (*Prabhakaran, 2017*).  We are unable to add titles and axis lables, so one should note the order in which they apply these commands.  (SA)
+```
+The loess.smooth function smooths "volatile" time sies. A least squares regression is performed on on "localized subsets", so it shows the smoothed version of the regression from above (*Prabhakaran, 2017*).  We are unable to add titles and axis lables, so one should note the order in which they apply these commands.  (SA)
+```{r}
 loess.smooth(x = b16$oxygen, y = b16$temp, span = 1/3, degree = 1,
     family = c("symmetric", "gaussian"), evaluation = 50) %>% plot
 
@@ -184,8 +218,8 @@ loess.smooth(x = b16$oxygen, y = b16$temp, span = 2/3, degree = 1,
 loess.smooth(x = b16$oxygen, y = b16$temp, span = 3/3, degree = 1,
     family = c("symmetric", "gaussian"), evaluation = 50) %>% plot
 ```
+Some data use use expresses preexisting non-buoy data on the Long Island Sound Study website that we transform here and analyze. We use water quality index categorizations for each Sound region between 2002-2011 that are either "good", "fair", or "poor". Using ggplot, we create a bar graph of this simple indicator to show the proportions against each other in 2011 for each region. I first create a dataframe similar to above bar graphs, order the data by index category similar to above bar graphs, then graph and add asthetics. Note, that the order of the regions is not correct going from west to east. The code looks like this: (SA)
 ```{r}
-#Some data use use expresses preexisting non-buoy data on the Long Island Sound Study website that we transform here and analyze. We use water quality index categorizations for each Sound region between 2002-2011 that are either "good", "fair", or "poor". Using ggplot, we create a bar graph of this simple indicator to show the proportions against each other in 2011 for each region. I first create a dataframe similar to above bar graphs, order the data by index category similar to above bar graphs, then graph and add asthetics. Note, that the order of the regions is not correct going from west to east. The code looks like this: (SA)
 allbasinsdf2 <- data.frame(WaterQual = rep(c("good", "fair", "poor"), each = 4), Basin = rep(c("The Narrows", "Western", "Central", "Eastern"), 3), Percent = c(19.3, 22.22, 46.81, 53.80, 63.2, 65.74, 48.94, 46.20, 17.50, 12.04, 4.26, 0))
 
 allbasinsdf2$WaterQual <- factor(allbasinsdf2$WaterQual, levels=c("good", "fair", "poor"))
@@ -197,26 +231,20 @@ allbasinsbar2
 ```
 To explain the affect water quality change can have on the Sound, we upload harvest data for oysters, clams, and lobsters for the years 1990-2017 and 1981-2017 for Connecticut and New York. I create seperate dataframes to index with by shellfish type, and delete rows with missing infromation. We create line graphs with ggplot to see how the amount of shellfish harvested changes over time (x axis is year, y axis is bushels for oysters, bushels for clams, and landings for lobsters). We only use New York harvest data. We use ggplot and create asthetics. Unfortunately, we have a hard time plotting the lines over eachother: (SA)
 ```{r}
-#duplicating dataframes
 
 shellny_oy <- shellny 
 shellny_clams <- shellny
 
-#deleting rows we do not need
-
 shellny_lob = shellny_lob[-36,]
-
-#plotting
 
 shellny_lob_p <- ggplot(shellny_lob, aes(year, lobsters, linetype = lty)) +
 geom_line(shape= 21, lwd = 1, lty = 1,  colour= "red", size=2) + xlab("Year") + ylab("Lobster Landings") + ggtitle("Lobster Landings") + theme_light() + labs(subtitle = "NY Landings between 1981 and 2015", caption = "LL reflect change of fish. mang. practices, socioeconomic conditions & species abundance")
-#Duplicated aesthetics after name standardisation: sizeIgnoring unknown parameters: shape
 shellny_lob_p
 ```
 The warm and cold water fish is also made into a line graph using ggplot that groups each sample by the fall and spring between 1984-2014. Fin fish at the sound are seperated into two categories of prefering temperature below 15C or prefer temperautre ranging between 11-22C, or warmer temperatures. This is the average number of species in each group captured in the spring and fall collection dates (*Howell & Gottschall, 2017*).  The plot is formatted as above, and asthetics are added, but the same issue of not being able to plot lines over each other seperates this index into four graphs when they should be two. Here is the fish index graph the Fall for warm water fish.  (SA)
 ```{r}
-shellfishny <- readr::read_csv("shellfishny.csv")
-warmcoldfall <- readr::read_csv("warmcoldfall.csv")
+shellfishny <- readr::read_csv(system.file("extdata/shellfishny.csv", package = "longisland")) 
+warmcoldfall <- readr::read_csv(system.file("extdata/warmcoldfall.csv", package = "longisland"))
 wcfall <- warmcoldfall
 wcspring <- warmcoldspring
 wcfall_w_p <- ggplot(wcfall[4], aes("year", warmwater)) + 
@@ -243,16 +271,18 @@ xlab("Year") + ylab("Cold Water Fish Counts") +
 ggtitle("Cold Water Fish Counts During Spring") + theme_light()
 wcspring_c_p
 ```
-3. RESULTS (SA)
+3. RESULTS (SA and KP)
 
 Dissolved Oxygen:
 
-Dissolved oxygen enters water at different rates from natural processes. One, diffusion from water turbidity directly adds oxygen from the surrounding air. Two, photosynthesis of plant life in water creates oxygen as a by-product (*McCaffrey, n.d.*). The mapview output for this indicator shows one point with over a -3 decrease, two points with a -3 to -2 mg/l decrease, four points with a -2 to -1 mg/l decrease, 7 points with a small -1 to 0 decrease, and 12 points with an overall increase between 0 and 3.  The two largest decreases are located at The Narrows, however are relativly close to the two largest increases bordering The Narrow and the Western Sound. This does not show a strong visual trend of overall dissolved oxygen decrease. The sf plots show the same infomation as the mapview, just in a different format. For example, this is the direct comparison of the mapview output for dissolved oxygen and the sf output:
+Dissolved oxygen enters water at different rates from natural processes. One, diffusion from water turbidity directly adds oxygen from the surrounding air. Two, photosynthesis of plant life in water creates oxygen as a by-product (*McCaffrey, n.d.*). The mapview output for this indicator shows one point with over a -3 decrease, two points with a -3 to -2 mg/l decrease, four points with a -2 to -1 mg/l decrease, 7 points with a small -1 to 0 decrease, and 12 points with an overall increase between 0 and 3.  The two largest decreases are located at The Narrows, however are relativly close to the two largest increases bordering The Narrow and the Western Sound. This does not show a strong visual trend of overall dissolved oxygen decrease. The sf plots show the same infomation as the mapview, just in a different format. For example, this is the direct comparison of the mapview output for dissolved oxygen and the sf output. In addition while the points do not show much of a pattern, the areal interpolation shows as what appears to be a greater decrease in dissolbed oxygen values in the Narrows (closer to New York City) with no change or slight increases across most of the rest of the Sound.
 ```{r}
 #mapview
 
 mapview_ox
 
+#areal interpolation
+plot(invdistrmsk_do, main = title_do)
 #sf plot
 
 mast_ox_p <- plot(mast[6], axes = TRUE, cex = 1.75, pch = 10, main = "Dissolved Oxygen Change at Buoys", key.pos = 1, breaks = "quantile", key.width = lcm(1.25), key.length = 1.0) + scale_y_continuous(breaks = c(-1, -.50, 0, .50, 1, 1.50, 2, 2.50, 3, 3.50)) + theme(plot.title=element_text(face="bold", size=14)) #we need to run this whole chunk because the mast_ox_p by itself produces NULL
@@ -261,11 +291,14 @@ The color differenciation between the two is different, so there is no dirct com
 
 Temperautre:
 
-The study's website notes that the Long Island Sound water temperature is increaseing at a rate of about 1.8 degrees celcius per century. The trend notes in a graph on the website shows the increaseing trend. However, water temperatures in the region stay relativly consistent from day to day (*What You Should Know*). The mapview output for water temperature actually shows that 22 of the points have a decrease in temperature between 0 and -2, and mainly between 0 and -1, while only 6 points show an increase in temperautre, unevenly, between 0 and 2 degrees. There is no significant visual pattern of decrease and increase in points. Here is a comparison between the mapview temperature change output and the sf plotting tmeperature change output. It is still a little easier to interpret the sf plot just by way of having more hues, however the mapview is interactive and shows all point values from the mastersheet when clicked. In addition, the sf plot necesitates the complete code to map in this case, and the mapview is allisgned a name and takes up less space.
+The study's website notes that the Long Island Sound water temperature is increaseing at a rate of about 1.8 degrees celcius per century. The trend notes in a graph on the website shows the increaseing trend. However, water temperatures in the region stay relativly consistent from day to day (*What You Should Know*). The mapview output for water temperature actually shows that 22 of the points have a decrease in temperature between 0 and -2, and mainly between 0 and -1, while only 6 points show an increase in temperautre, unevenly, between 0 and 2 degrees. There is no significant visual pattern of decrease and increase in points. Here is a comparison between the mapview temperature change output, the areal interpolation, and the sf plotting tmeperature change output. It is still a little easier to interpret the sf plot just by way of having more hues, however the mapview is interactive and shows all point values from the mastersheet when clicked. The areal interpolation though shows the areas where general temperature increase is occurring which looks like closer to New York City in the Narrows Region and a little section of the eastern part of the sound, although that is likely influenced by one pont. In addition, the sf plot necesitates the complete code to map in this case, and the mapview is allisgned a name and takes up less space.
 ```{r}
 #mapview
 
 mapview_temp
+
+#areal interpolation
+plot(invdistrmsk_temp, main = title_temp)
 
 #sf plot
 
@@ -278,6 +311,9 @@ Salinity is a measurement of dissolved salts in water. It is usually higher duri
 #mapview
 
 mapview_sal
+
+#areal interpolation
+plot(invdistrmsk_sal, main = title_sal)
 
 #sf plot
 
