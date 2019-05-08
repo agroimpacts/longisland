@@ -101,47 +101,44 @@ US_Data <- getData('GADM', country='USA', level=0) %>% st_as_sf
 US_Data <- st_crop(US_Data, st_bbox(mastersheet_new)) %>% as_Spatial
 ```
 ```{r}
-<<<<<<< HEAD
 system.file("extdata/Mastersheet_new.csv", package = "longisland")
 dat <- read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland"))
 mastersheet_new <- readr::read_csv(system.file("extdata/Mastersheet_new.csv", package = "longisland")) %>% st_as_sf(., coords = c("long", "lat"), crs = 4326)
-=======
 dat <- mastersheet_new %>% as_tibble %>% 
   select(-geometry) %>% 
   bind_cols(., mastersheet_new %>% st_coordinates %>% as_tibble) %>% 
   rename(x = X, y = Y)
->>>>>>> 2a264ba84a0d451bc2467b21d85f5e29ab7cb810
 invdistdo <- gstat(formula = Do_change ~ 1, locations = ~x + y, data = dat)
 invdistrdo <- interpolate(object = r, model = invdistdo)
-invdistrmsk_do <- mask(x = invdistrdo, mask = US_Data, inverse = TRUE)
+invdistrmsk_do <- mask(x = invdistrdo, mask = US_data, inverse = TRUE)
 title_do <- c("Dissolved Oxygen Change (kg/m^3)")
 plot(invdistrmsk_do, main = title_do)
 ```
 ```{r}
 invdistsal <- gstat(formula = Sal_change ~ 1, locations = ~x + y, data = dat)
 invdistrsal <- interpolate(object = r, model = invdistsal)
-invdistrmsk_sal <- mask(x = invdistrsal, mask = US_Data, inverse = TRUE)
+invdistrmsk_sal <- mask(x = invdistrsal, mask = US_data, inverse = TRUE)
 title_sal <- c("Salinity Change (PSU)")
 plot(invdistrmsk_sal, main = title_sal)
 ```
 ```{r}
 invdisttemp <- gstat(formula = Temp_change ~ 1, locations = ~x + y, data = dat)
 invdistrtemp <- interpolate(object = r, model = invdisttemp)
-invdistrmsk_temp <- mask(x = invdistrtemp, mask = US_Data, inverse = TRUE)
+invdistrmsk_temp <- mask(x = invdistrtemp, mask = US_data, inverse = TRUE)
 title_temp <- c("Temperature Change (Fahrenheit)")
 plot(invdistrmsk_temp, main = title_temp)
 ```
 ```{r}
 invdistcon <- gstat(formula = Con_change ~ 1, locations = ~x + y, data = dat)
 invdistrcon <- interpolate(object = r, model = invdistcon)
-invdistrmsk_con <- mask(x = invdistrcon, mask = US_Data, inverse = TRUE)
+invdistrmsk_con <- mask(x = invdistrcon, mask = US_data, inverse = TRUE)
 title_con <- c("Conductivity Change (S/m)")
 plot(invdistrmsk_con, main = title_con)
 ```
 ```{r}
 invdistden <- gstat(formula = Den_change ~ 1, locations = ~x + y, data = dat)
 invdistrden <- interpolate(object = r, model = invdistden)
-invdistrmsk_den <- mask(x = invdistrden, mask = US_Data, inverse = TRUE)
+invdistrmsk_den <- mask(x = invdistrden, mask = US_data, inverse = TRUE)
 title_den <- c("Density Change (kg/m^3)")
 plot(invdistrmsk_den, main = title_den)
 ```
@@ -151,20 +148,18 @@ mast_sal_p <- plot(mast[8], axes = TRUE, cex = 1.75, pch = 10, main = "Salinity 
 ```
 Data on water quality change is extracted at individual buoy locations in the analysis from The Narrows, the Western Sound, the Central Sound, and the Eastern Sound (*Long Island Sound Coastal Observatory...*). We use 13 individual buoy locations. Some points from the mastersheet do not have complete data between time periods. (SA)
 ```{r}
-BI2 <- readr::read_csv(system.file("extdata/I2.csv", package = "longisland")) 
+BI2 <- readr::read_csv(
+  system.file("extdata/I2.csv", package = "longisland")) 
 BI2_na.omit <- na.omit(BI2)
 bI2 <- BI2_na.omit
 bI2
 ```
 To look at the change in the indicator values, we first create a gpplot of the bC1 buoy at The Narrows to show the dissolved oxygen, temperature, and salinity change over time. This buoy time period spans between December 05, 1994 and November 06, 2017, and has 434 points. We create asthtics for the plot, but keep it relatively simple. Here is an example of a code chunk: (SA)
 ```{r}
+bC1 <- readr::read_csv(
+  system.file("extdata/C1.csv", package = "longisland")) 
 bC1_oxygen <- ggplot(bC1, aes(newdate, oxygen, fill = group)) +
-  geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + 
-  xlab("Date") + ylab("Dissolved Oxygen") + ggtitle( "Dissolved Oxygen at bC1") +
-  theme_light() +
-  labs(subtitle = "Oxygen in mg/L", 
-       caption = "Enought dissolved oxygen content is an important indicator of good water quality") + 
-  theme(plot.title=element_text(face="bold", size=14))
+geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + xlab("Date") + ylab("Dissolved Oxygen") + ggtitle( "Dissolved Oxygen at bC1") + theme_light() +labs(subtitle = "Oxygen in mg/L", caption = "Enought dissolved oxygen content is an important indicator of good water quality") + theme(plot.title=element_text(face="bold", size=14))
 bC1_oxygen
 ```
 We do the same process for b16 at the Western Basin, b28 at the Central Basin, and bJ2 at the Eastern Basin, and the chunk of code to plot dosn't change much except for the input data and output names, as well as title and caption information. (SA)
@@ -218,6 +213,9 @@ bC1_cor_bar
 ```
 We then take a quick look as some functions that show more advanced metircs on the indicators, but we do not really need to investigate this for the analysis. The lm function conveniently plots four outputs that take a little time to interpret, but are essy to produce. Though we do not go into these plots in depth, they do expres this kind of inconsistency and lack of correlation between variables that we see in the bar graphs above. The scatter.smooth function create a scatterplot of two independent variables, which I create for one buoyfor the dissolved oxygen indicator ~ temperature just to display: (SA)
 ```{r}
+b16 <- readr::read_csv(
+  system.file("extdata/b16.csv", package = "longisland")) 
+b16
 scatter.smooth(x = b16$oxygen, y = b16$temp, main = "Oxygen ~ Temperature", pch = 19, cex = .75, col = "#33CCCC") +  theme(plot.title=element_text(face="bold", size=14))
 ```
 The loess.smooth function smooths "volatile" time sies. A least squares regression is performed on on "localized subsets", so it shows the smoothed version of the regression from above (*Prabhakaran, 2017*).  We are unable to add titles and axis lables, so one should note the order in which they apply these commands.  (SA)
@@ -244,7 +242,8 @@ allbasinsbar2
 ```
 To explain the affect water quality change can have on the Sound, we upload harvest data for oysters, clams, and lobsters for the years 1990-2017 and 1981-2017 for Connecticut and New York. I create seperate dataframes to index with by shellfish type, and delete rows with missing infromation. We create line graphs with ggplot to see how the amount of shellfish harvested changes over time (x axis is year, y axis is bushels for oysters, bushels for clams, and landings for lobsters). We only use New York harvest data. We use ggplot and create asthetics. Unfortunately, we have a hard time plotting the lines over eachother: (SA)
 ```{r}
-
+shellny <- readr::read_csv(
+  system.file("extdata/shellfishny.csv", package = "longisland")) 
 shellny_oy <- shellny 
 shellny_clams <- shellny
 
@@ -256,7 +255,6 @@ shellny_lob_p
 ```
 The warm and cold water fish is also made into a line graph using ggplot that groups each sample by the fall and spring between 1984-2014. Fin fish at the sound are seperated into two categories of prefering temperature below 15C or prefer temperautre ranging between 11-22C, or warmer temperatures. This is the average number of species in each group captured in the spring and fall collection dates (*Howell & Gottschall, 2017*).  The plot is formatted as above, and asthetics are added, but the same issue of not being able to plot lines over each other seperates this index into four graphs when they should be two. Here is the fish index graph the Fall for warm water fish.  (SA)
 ```{r}
-shellfishny <- readr::read_csv(system.file("extdata/shellfishny.csv", package = "longisland")) 
 warmcoldfall <- readr::read_csv(system.file("extdata/warmcoldfall.csv", package = "longisland"))
 wcfall <- warmcoldfall
 wcspring <- warmcoldspring
