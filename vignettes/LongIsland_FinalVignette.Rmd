@@ -95,9 +95,8 @@ mastersheet_new <- readr::read_csv(
   st_as_sf(., coords = c("long", "lat"), crs = 4326)
 r <- raster(extent(mastersheet_new), res = 0.03)
 US_Data <- getData('GADM', country='USA', level=0) %>% st_as_sf
-# US_Data %>% st_as_sf %>% 
-#   filter(NAME_1 %in% c("New York", "Connecticut", "New Jersey")) -> US_Data 
-# US_Data %>% st_geometry %>% plot(col = "grey")
+US_Data %>% st_as_sf 
+US_Data %>% st_geometry %>% plot(col = "grey")
 US_Data <- st_crop(US_Data, st_bbox(mastersheet_new)) %>% as_Spatial
 ```
 ```{r}
@@ -110,35 +109,35 @@ dat <- mastersheet_new %>% as_tibble %>%
   rename(x = X, y = Y)
 invdistdo <- gstat(formula = Do_change ~ 1, locations = ~x + y, data = dat)
 invdistrdo <- interpolate(object = r, model = invdistdo)
-invdistrmsk_do <- mask(x = invdistrdo, mask = US_data, inverse = TRUE)
+invdistrmsk_do <- mask(x = invdistrdo, mask = US_Data, inverse = TRUE)
 title_do <- c("Dissolved Oxygen Change (kg/m^3)")
 plot(invdistrmsk_do, main = title_do)
 ```
 ```{r}
 invdistsal <- gstat(formula = Sal_change ~ 1, locations = ~x + y, data = dat)
 invdistrsal <- interpolate(object = r, model = invdistsal)
-invdistrmsk_sal <- mask(x = invdistrsal, mask = US_data, inverse = TRUE)
+invdistrmsk_sal <- mask(x = invdistrsal, mask = US_Data, inverse = TRUE)
 title_sal <- c("Salinity Change (PSU)")
 plot(invdistrmsk_sal, main = title_sal)
 ```
 ```{r}
 invdisttemp <- gstat(formula = Temp_change ~ 1, locations = ~x + y, data = dat)
 invdistrtemp <- interpolate(object = r, model = invdisttemp)
-invdistrmsk_temp <- mask(x = invdistrtemp, mask = US_data, inverse = TRUE)
+invdistrmsk_temp <- mask(x = invdistrtemp, mask = US_Data, inverse = TRUE)
 title_temp <- c("Temperature Change (Fahrenheit)")
 plot(invdistrmsk_temp, main = title_temp)
 ```
 ```{r}
 invdistcon <- gstat(formula = Con_change ~ 1, locations = ~x + y, data = dat)
 invdistrcon <- interpolate(object = r, model = invdistcon)
-invdistrmsk_con <- mask(x = invdistrcon, mask = US_data, inverse = TRUE)
+invdistrmsk_con <- mask(x = invdistrcon, mask = US_Data, inverse = TRUE)
 title_con <- c("Conductivity Change (S/m)")
 plot(invdistrmsk_con, main = title_con)
 ```
 ```{r}
 invdistden <- gstat(formula = Den_change ~ 1, locations = ~x + y, data = dat)
 invdistrden <- interpolate(object = r, model = invdistden)
-invdistrmsk_den <- mask(x = invdistrden, mask = US_data, inverse = TRUE)
+invdistrmsk_den <- mask(x = invdistrden, mask = US_Data, inverse = TRUE)
 title_den <- c("Density Change (kg/m^3)")
 plot(invdistrmsk_den, main = title_den)
 ```
@@ -159,8 +158,16 @@ To look at the change in the indicator values, we first create a gpplot of the b
 bC1 <- readr::read_csv(
   system.file("extdata/C1.csv", package = "longisland")) 
 bC1_oxygen <- ggplot(bC1, aes(newdate, oxygen, fill = group)) +
-geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + xlab("Date") + ylab("Dissolved Oxygen") + ggtitle( "Dissolved Oxygen at bC1") + theme_light() +labs(subtitle = "Oxygen in mg/L", caption = "Enought dissolved oxygen content is an important indicator of good water quality") + theme(plot.title=element_text(face="bold", size=14))
+geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + xlab("Date") + ylab("Dissolved Oxygen") + ggtitle( "Dissolved Oxygen at bC1") + theme_light() +labs(subtitle = "Oxygen in mg/L", caption = "Enough dissolved oxygen content is an important indicator of good water quality") + theme(plot.title=element_text(face="bold", size=14))
 bC1_oxygen
+
+bC1_temp <- ggplot(bC1, aes(newdate, temp, fill = group)) +
+geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + xlab("Date") + ylab("Temperature") + ggtitle("Temperaute at bC1") + theme_light() +labs(subtitle = "Temperature in C", caption = "Drastic temperautre change is an important indicator of water quality change") + theme(plot.title=element_text(face="bold", size=14))
+bC1_temp
+
+bC1_sal <- ggplot(bC1, aes(newdate, sal, fill = group)) +
+geom_point(shape= 21, fill= "#33CCCC", colour= "black", size=2) + xlab("Date") + ylab("Salinity") + ggtitle("Water Salinity at bC1") + theme_light() +labs(subtitle = "Oxygen in mg/L", caption = "Drastic salinity change is an important indicator of water quality change") + theme(plot.title=element_text(face="bold", size=14))
+bC1_sal
 ```
 We do the same process for b16 at the Western Basin, b28 at the Central Basin, and bJ2 at the Eastern Basin, and the chunk of code to plot dosn't change much except for the input data and output names, as well as title and caption information. (SA)
 
@@ -214,7 +221,7 @@ bC1_cor_bar
 We then take a quick look as some functions that show more advanced metircs on the indicators, but we do not really need to investigate this for the analysis. The lm function conveniently plots four outputs that take a little time to interpret, but are essy to produce. Though we do not go into these plots in depth, they do expres this kind of inconsistency and lack of correlation between variables that we see in the bar graphs above. The scatter.smooth function create a scatterplot of two independent variables, which I create for one buoyfor the dissolved oxygen indicator ~ temperature just to display: (SA)
 ```{r}
 b16 <- readr::read_csv(
-  system.file("extdata/b16.csv", package = "longisland")) 
+  system.file("extdata/16.csv", package = "longisland")) 
 b16
 scatter.smooth(x = b16$oxygen, y = b16$temp, main = "Oxygen ~ Temperature", pch = 19, cex = .75, col = "#33CCCC") +  theme(plot.title=element_text(face="bold", size=14))
 ```
@@ -247,15 +254,28 @@ shellny <- readr::read_csv(
 shellny_oy <- shellny 
 shellny_clams <- shellny
 
-shellny_lob = shellny_lob[-36,]
+shellny_lob = shellny[-36,]
 
 shellny_lob_p <- ggplot(shellny_lob, aes(year, lobsters, linetype = lty)) +
 geom_line(shape= 21, lwd = 1, lty = 1,  colour= "red", size=2) + xlab("Year") + ylab("Lobster Landings") + ggtitle("Lobster Landings") + theme_light() + labs(subtitle = "NY Landings between 1981 and 2015", caption = "LL reflect change of fish. mang. practices, socioeconomic conditions & species abundance")
 shellny_lob_p
+
+shellny_oy_p <- ggplot(shellny_oy, aes(year, oysters)) + 
+geom_line(shape= 21, lwd = 1, colour= "#33CCCC", size=2) +
+xlab("Year") + ylab("Oysters Bushels") + 
+ggtitle( "Oysters Bushels at NY") + theme_light()
+shellny_oy_p
+
+shellny_clams_p <- ggplot(shellny_clams, aes(year, clams)) + 
+geom_line(shape= 21, lwd = 1, colour= "black", size=2) +
+xlab("Year") + ylab("Clam Bags") + 
+ggtitle( "Clam Bags at NY") + theme_light()
+shellny_clams_p
 ```
 The warm and cold water fish is also made into a line graph using ggplot that groups each sample by the fall and spring between 1984-2014. Fin fish at the sound are seperated into two categories of prefering temperature below 15C or prefer temperautre ranging between 11-22C, or warmer temperatures. This is the average number of species in each group captured in the spring and fall collection dates (*Howell & Gottschall, 2017*).  The plot is formatted as above, and asthetics are added, but the same issue of not being able to plot lines over each other seperates this index into four graphs when they should be two. Here is the fish index graph the Fall for warm water fish.  (SA)
 ```{r}
 warmcoldfall <- readr::read_csv(system.file("extdata/warmcoldfall.csv", package = "longisland"))
+warmcoldspring<- readr::read_csv(system.file("extdata/warmcoldspring.csv", package = "longisland"))
 wcfall <- warmcoldfall
 wcspring <- warmcoldspring
 wcfall_w_p <- ggplot(wcfall[4], aes("year", warmwater)) + 
@@ -364,7 +384,7 @@ bC1_oxygen
 
 #summary statitics as bC1 
 
-summary_bC1_bar2
+summary_bC1_bar
 ```
 The temperature output is interesting. It shows a seasonal trend in the span of about 23 years. Between each year there is about a 10-degree gap between the lowest temperature of the year at about January and the highest temperature of the year at about August. If there was a polynomial trendline added we would see it quiver between each year. It's difficult to find specific indications about general water temperature increase at bC1 because it is only one buoy and a small timespan, however I do notice that the maximum August temperature between 2015 and 2017 at greater than those from the early 2000s. This could indicate decreasing water quality. There is a gap in time between six month gap between 6/6/2006 at 12.0588 degrees celcius and 12/11/2006 at 13.3754 degrees celcius. If this gap was filled there would be another lump upward showing temperature increase about 20 degrees celcius. There are a few more smaller gaps, including a 3-month gap between 2/27/1998 and Jun 01 1998 at the beginning that is noticable in the graph.
 
@@ -376,7 +396,7 @@ bC1_temp
 
 #summary statitics as bC1 
 
-summary_bC1_bar2
+summary_bC1_bar
 ```
 For salinity, there seems to be a back-and-forth between very high and very low values that could folow weather patterns. Usually, when there is a dry period without rain for a few days, it rains enough to make up for the difference in the span of only a few hours which can rapidly decrease salinity. Some spans without rain are more extreme than others depending on regional climatic pattenerns. There are stronger storms at fairly regular intervals, which provide more rain than normal and decrease salinity further. Increase in salinity is due to a decrease in water level and an increase in human industrial and activity discharge, which changes more steadily and at a slower pace than rainfall per week. This chart would probably look different in a region like Seattle where it rains more regularily. There, the graph would likely have a smaller range of values, as there is less opportunity for water to evaporate before the next rainfall.
 
@@ -388,9 +408,9 @@ bC1_sal
 
 #summary statitics as bC1 
 
-summary_bC1_bar2
+summary_bC1_bar
 ```
-In addition, I check the correlation and variance bar graph that I created earlier in the code below. It shows that there is a large negative variance between the temperature and salinity variables. This means that there is a large differenc beetween the sqaurd inputs values to the expected values, and reminds us of the differences between the temperature and salinity distributions. The temperature variable has a smaller range of values and a cleaner, seaosnal trend, while the salinity variable has less trend and correlation between it and date, creating higher variability when compared.
+In addition, I check the correlation and variance bar graph that I created earlier in the code below. It shows that there is a large negative variance between the temperature and salinity variables. This means that there is a large differenc beetween the sqaured inputs values to the expected values, and reminds us of the differences between the temperature and salinity distributions. The temperature variable has a smaller range of values and a cleaner, seaosnal trend, while the salinity variable has less trend and correlation between it and date, creating higher variability when compared.
 ```{r}
 #correlation and variance
 
